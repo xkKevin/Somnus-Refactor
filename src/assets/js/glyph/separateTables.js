@@ -48,7 +48,7 @@ function separate_tables_subset(m1, m2, m3, rule, t1_name, t2_name, t3_name, out
 
     drawTableForRow(g, m1, [0, 2 * colHeight], colWidth, colHeight, t1_name, colFontSize, cellFontSize)
     drawPcentBar(g, [0, 2 * colHeight], m1[0].length * colWidth, m1.length * colHeight, colHeight, xPercents[0], yPercents[0])
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g, [(m1[0].length + 0.1) * colWidth, (1 + m1.length / 2) * colHeight + colHeight / 2], 0.8 * colWidth, colHeight, arrowUrl)
 
     drawTableForRow(g, m2, [(m1[0].length + 1) * colWidth, colHeight], colWidth, colHeight, t2_name, colFontSize, cellFontSize, outColor1)
@@ -100,7 +100,7 @@ function separate_tables_decompose(m1, m2s, rule, t1_name, t2names, name, showTa
     drawTableForRow(g, m1, [0, colHeight + (m2s.length - 1) / 2 * colHeight * 2], colWidth, colHeight, t1_name, colFontSize, cellFontSize)
     drawPcentBar(g, [0, colHeight + (m2s.length - 1) / 2 * colHeight * 2], m1[0].length * colWidth, m1.length * colHeight, colHeight, xPercents[0], yPercents[0])
 
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g, [(m1[0].length + 0.1) * colWidth, (1 + m1.length / 2) * colHeight - colHeight / 2 + (m2s.length - 1) / 2 * colHeight * 2], 0.8 * colWidth, colHeight, arrowUrl)
 
     // for(let idx = 0;idx < m2s.length;idx++){
@@ -165,7 +165,7 @@ function separate_tables_split(m1, m2, m3, rule, t1_name, t2_name, t3_name, outC
 
     drawTableForColumn(g, m1, [0, colHeight], colWidth, colHeight, t1_name, colFontSize, cellFontSize)
     drawPcentBar(g, [0, colHeight], m1[0].length * colWidth, m1.length * colHeight, colHeight, xPercents[0], yPercents[0])
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g, [(m1[0].length + 0.1) * colWidth, (1 + m1.length / 2) * colHeight - colHeight / 2], 0.8 * colWidth, colHeight, arrowUrl)
 
     drawTableForColumn(g, m2, [m1[0].length * colWidth + colWidth, colHeight], colWidth, colHeight, t2_name, colFontSize, cellFontSize, outColors1)

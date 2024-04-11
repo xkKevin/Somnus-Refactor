@@ -50,7 +50,7 @@ export function combine_columns_merge(m1,m2,rule,t1_name,t2_name,inExpOrImp,outE
     drawPcentBar(g,[0,colHeight],m1[0].length * colWidth,m1.length * colHeight,colHeight,xPercents[0],yPercents[0])
 
     // 添加加号和箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g,[(m1[0].length + 0.1) * colWidth,(1 + m1.length / 2) * colHeight - colHeight / 2],0.8 * colWidth, colHeight,arrowUrl)
 
     if(inExpOrImp.length === 2){

@@ -20,7 +20,7 @@ function delete_column(m1,m2,rule,t1_name,t2_name,outColors,name,showTableName,p
 
     let width = svgSize.width
     let height = svgSize.height
-    let colWidth = width / (m1[0].length + m2[0].length + 2) 
+    let colWidth = width / (m1[0].length + m2[0].length + 2)
     let colHeight = showOperation ? height / (m1.length + 3) : height / (m1.length + 2.5)
     let colFontSize = fontSize.colFontSize
     let cellFontSize = fontSize.cellFontSize
@@ -54,7 +54,7 @@ function delete_column(m1,m2,rule,t1_name,t2_name,outColors,name,showTableName,p
     drawTableForColumn(g,m1,[0,colHeight],colWidth,colHeight,t1_name,colFontSize,cellFontSize)
     drawPcentBar(g,[0,colHeight],m1[0].length * colWidth,m1.length * colHeight,colHeight,xPercents[0],yPercents[0])
     // 添加加号和箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g,[(m1[0].length + 0.2) * colWidth,(1 + m1.length / 2) * colHeight - colHeight / 2],0.8 * colWidth, colHeight,arrowUrl)
 
     // drawTable(g,m2,expOrImpCols,[(m1[0].length + 1) * colWidth,colHeight],colWidth,colHeight,t2_name,colFontSize,cellFontSize,'col')
@@ -80,7 +80,7 @@ function delete_duplicate(m1,m2,oriExpOrImpCols,rule,t1_name,t2_name,name,showTa
 
     let width = svgSize.width
     let height = svgSize.height
-    let colWidth = width / (2 * m1[0].length + 1) 
+    let colWidth = width / (2 * m1[0].length + 1)
     let colHeight = showOperation ? height / (m1.length + 3) : height / (m1.length + 2.5)
     let colFontSize = fontSize.colFontSize
     let cellFontSize = fontSize.cellFontSize
@@ -119,12 +119,12 @@ function delete_duplicate(m1,m2,oriExpOrImpCols,rule,t1_name,t2_name,name,showTa
     drawTable(g,m1,expOrImpCols,[0,colHeight],colWidth,colHeight,t1_name,colFontSize,cellFontSize,'col')
     drawPcentBar(g,[0,colHeight],m1[0].length * colWidth,m1.length * colHeight,colHeight,xPercents[0],yPercents[0])
     // 添加箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g,[(m1[0].length + 0.1) * colWidth,(1 + m1.length / 2) * colHeight - colHeight / 2],0.8 * colWidth, colHeight,arrowUrl)
 
     drawTable(g,m2,oriExpOrImpCols,[(m1[0].length + 1) * colWidth,colHeight],colWidth,colHeight,t2_name,colFontSize,cellFontSize,'col')
     drawPcentBar(g,[(m1[0].length + 1) * colWidth,colHeight],m2[0].length * colWidth,m2.length * colHeight,colHeight,xPercents[1],yPercents[1])
-    
+
     drawDashRect(g,[(m1[0].length + 1) * colWidth,colHeight],m2.length * colHeight,m1[0].length * colWidth)
 
     let inColLenAndMid = drawHighLightCol(g,m1,expOrImpCols,[0,colHeight],colWidth,colHeight)
@@ -155,7 +155,7 @@ function delete_dropna(m1,m2,rule,t1_name,t2_name,inColors,outColors,naPos,name,
 
     let width = svgSize.width
     let height = svgSize.height
-    let colWidth = width / (m1[0].length + m2[0].length + 2) 
+    let colWidth = width / (m1[0].length + m2[0].length + 2)
     let colHeight = showOperation ? height / (m1.length + 3) : height / (m1.length + 2.5)
     let colFontSize = fontSize.colFontSize
     let cellFontSize = fontSize.cellFontSize
@@ -192,7 +192,7 @@ function delete_dropna(m1,m2,rule,t1_name,t2_name,inColors,outColors,naPos,name,
     drawTableForColumn(g,m1,[0,colHeight],colWidth,colHeight,t1_name,colFontSize,cellFontSize,inColors,naPos)
     drawPcentBar(g,[0,colHeight],m1[0].length * colWidth,m1.length * colHeight,colHeight,xPercents[0],yPercents[0])
     // 添加加号和箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g,[(m1[0].length + 0.1) * colWidth,(1 + m1.length / 2) * colHeight - colHeight / 2],0.8 * colWidth, colHeight,arrowUrl)
 
     // drawTable(g,m1,[],[(m1[0].length + 1) * colWidth,colHeight],colWidth,colHeight,t2_name,colFontSize,cellFontSize,'col',-1,expOrImpCols[0])

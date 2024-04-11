@@ -19,7 +19,7 @@ function delete_row(m1,m2,rule,t1_name,t2_name,outColors,name,showTableName,pos,
     let width = svgSize.width
     let height = svgSize.height
     let colWidth = width / (m2[0].length * 2 + 1)
-    let colHeight = showOperation ? height / (m1.length + 3) : height / (m1.length + 2.5) 
+    let colHeight = showOperation ? height / (m1.length + 3) : height / (m1.length + 2.5)
     let colFontSize = fontSize.colFontSize
     let cellFontSize = fontSize.cellFontSize
 
@@ -55,11 +55,11 @@ function delete_row(m1,m2,rule,t1_name,t2_name,outColors,name,showTableName,pos,
     drawTableForRow(g,m1,[0,colHeight],colWidth,colHeight,t1_name,colFontSize,cellFontSize)
     drawPcentBar(g,[0,colHeight],m1[0].length * colWidth,m1.length * colHeight,colHeight,xPercents[0],yPercents[0])
 
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g,[(m1[0].length + 0.1) * colWidth,(1 + m1.length / 2) * colHeight - colHeight / 2],0.8 * colWidth,colHeight,arrowUrl)
     drawTableForRow(g,m2,[(m1[0].length + 1) * colWidth,colHeight],colWidth,colHeight,t2_name,colFontSize,cellFontSize,outColors)
     drawPcentBar(g,[(m1[0].length + 1) * colWidth,colHeight],m2[0].length * colWidth,m2.length * colHeight,colHeight,xPercents[1],yPercents[1])
-    
+
     drawDashRect(g,[(m1[0].length + 1) * colWidth,colHeight],m1.length * colHeight,m1[0].length * colWidth)
     if(showOperation)drawOperationName(g,[width / 2, (m1.length + 2) * colHeight],rule,'1.2em',colFontSize)
 }
@@ -106,12 +106,12 @@ function delete_duplicate_row_fullColumn(m1, m2, rule, t1_name, t2_name,inColor,
     drawTableForRow(g,m1,[0,colHeight],colWidth,colHeight,t1_name,colFontSize,cellFontSize,inColor)
     drawPcentBar(g,[0,colHeight],m1[0].length * colWidth,m1.length * colHeight,colHeight,xPercents[0],yPercents[0])
     // 添加箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g,[(m1[0].length + 0.1) * colWidth,(1 + m1.length / 2) * colHeight - colHeight / 2],0.8 * colWidth, colHeight,arrowUrl)
 
     drawTableForRow(g,m2,[(m1[0].length + 1) * colWidth,colHeight],colWidth,colHeight,t2_name,colFontSize,cellFontSize,outColor)
     drawPcentBar(g,[(m1[0].length + 1) * colWidth,colHeight],m2[0].length * colWidth,m2.length * colHeight,colHeight,xPercents[1],yPercents[1])
-    
+
     drawDashRect(g,[(m1[0].length + 1) * colWidth,colHeight],m1.length * colHeight,m1[0].length * colWidth)
 
     let yOfLine = (m1.length + 2) * colHeight
@@ -126,7 +126,7 @@ function delete_duplicate_row_partColumn(m1, m2, rule, t1_name, t2_name,inColors
 
     let width = svgSize.width
     let height = svgSize.height
-    let colWidth = width / (m1[0].length + m2[0].length + 1) 
+    let colWidth = width / (m1[0].length + m2[0].length + 1)
     let colHeight = showOperation ? height / (m1.length + 3) : height / (m1.length + 2.5)
     let colFontSize = fontSize.colFontSize
     let cellFontSize = fontSize.cellFontSize
@@ -156,16 +156,16 @@ function delete_duplicate_row_partColumn(m1, m2, rule, t1_name, t2_name,inColors
     .attr('stroke-width',"1px")
     .style("stroke-linecap", "round")
     .attr('class',`glyph_${name}`)
-    
+
     drawTableForRow(g,m1,[0,colHeight],colWidth,colHeight,t1_name,colFontSize,cellFontSize,inColors)
     drawPcentBar(g,[0,colHeight],m1[0].length * colWidth,m1.length * colHeight,colHeight,xPercents[0],yPercents[0])
     // 添加箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g,[(m1[0].length + 0.2) * colWidth,(1 + m1.length / 2) * colHeight - colHeight / 2],0.8 * colWidth, colHeight,arrowUrl)
 
     drawTableForRow(g,m2,[(m1[0].length + 1) * colWidth,colHeight],colWidth,colHeight,t2_name,colFontSize,cellFontSize,outColors)
     drawPcentBar(g,[(m1[0].length + 1) * colWidth,colHeight],m2[0].length * colWidth,m2.length * colHeight,colHeight,xPercents[1],yPercents[1])
-    
+
     if(m1.length !== m2.length)drawDashRect(g,[(m1[0].length + 1) * colWidth,colHeight],m1.length * colHeight,m2[0].length * colWidth)
 
     let yOfLine = (m1.length + 2) * colHeight
@@ -180,7 +180,7 @@ function delete_filter(m1, m2, rule, t1_name, t2_name,outColor,name,showTableNam
 
     let width = svgSize.width
     let height = svgSize.height
-    let colWidth = width / (2 * m1[0].length + 1) 
+    let colWidth = width / (2 * m1[0].length + 1)
     let colHeight = showOperation ? height / (m1.length + 3) : height / (m1.length + 2.5)
     let colFontSize = fontSize.colFontSize
     let cellFontSize = fontSize.cellFontSize
@@ -213,12 +213,12 @@ function delete_filter(m1, m2, rule, t1_name, t2_name,outColor,name,showTableNam
     drawTableForRow(g,m1,[0,colHeight],colWidth,colHeight,t1_name,colFontSize,cellFontSize)
     drawPcentBar(g,[0,colHeight],m1[0].length * colWidth,m1.length * colHeight,colHeight,xPercents[0],yPercents[0])
     // 添加箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g,[(m1[0].length + 0.1) * colWidth,(1 + m1.length / 2) * colHeight - colHeight / 2],0.8 * colWidth, colHeight,arrowUrl)
 
     drawTableForRow(g,m2,[(m1[0].length + 1) * colWidth,colHeight],colWidth,colHeight,t2_name,colFontSize,cellFontSize,outColor)
     drawPcentBar(g,[(m1[0].length + 1) * colWidth,colHeight],m2[0].length * colWidth,m2.length * colHeight,colHeight,xPercents[1],yPercents[1])
-    
+
     drawDashRect(g,[(m1[0].length + 1) * colWidth,colHeight],m1.length * colHeight,m1[0].length * colWidth)
 
     let yOfLine = (m1.length + 2) * colHeight

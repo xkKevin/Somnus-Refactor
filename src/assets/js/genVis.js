@@ -100,7 +100,6 @@ import { getGraphs } from "@/assets/js/utils/renderTree/getLayout";
 import { drawNode, drawEdge } from "@/assets/js/utils/renderTree/render";
 import { getComponents } from "@/assets/js/utils/renderTree/getComponents";
 import { svgSize, nodeSize } from "@/assets/js/config/config";
-import "@/assets/js/utils/common/importJs.js";
 
 import {
   generateDataForTablesConcat,

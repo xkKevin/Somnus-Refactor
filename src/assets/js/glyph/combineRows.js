@@ -50,7 +50,7 @@ function combine_rows_sum(m1, m2, rule, t1_name, t2_name, name, showTableName, p
     drawTableForColumn(g, m1, [0, colHeight], colWidth, colHeight, t1_name, colFontSize, cellFontSize)
     drawPcentBar(g, [0, colHeight], m1[0].length * colWidth, m1.length * colHeight, colHeight, xPercents[0], yPercents[0])
         // 添加加号和箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g, [(m1[0].length + 0.1) * colWidth, (1 + m1.length / 2) * colHeight - colHeight / 2], 0.8 * colWidth, colHeight, arrowUrl)
 
     drawTableForColumn(g, m2, [(m1[0].length + 1) * colWidth, colHeight], colWidth, colHeight, t2_name, colFontSize, cellFontSize, outColor)
@@ -103,7 +103,7 @@ function combine_rows_interpolate(m1, m2, rule, t1_name, t2_name, naPos, name, s
     drawTableForColumn(g, m1, [0, colHeight], colWidth, colHeight, t1_name, colFontSize, cellFontSize, [], naPos)
     drawPcentBar(g, [0, colHeight], m1[0].length * colWidth, m1.length * colHeight, colHeight, xPercents[0], yPercents[0])
         // 添加加号和箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g, [(m1[0].length + 0.1) * colWidth, (1 + m1.length / 2) * colHeight - colHeight / 2], 0.8 * colWidth, colHeight, arrowUrl)
 
     drawTableForColumn(g, m2, [(m1[0].length + 1) * colWidth, colHeight], colWidth, colHeight, t2_name, colFontSize, cellFontSize)

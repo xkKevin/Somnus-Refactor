@@ -49,7 +49,7 @@ function transform_tables_rearrange(m1, m2, rule, t1_name, t2_name, inColor, out
     drawTableForColumn(g, m1, [0, colHeight], colWidth, colHeight, t1_name, colFontSize, cellFontSize, inColor)
     drawPcentBar(g, [0, colHeight], m1[0].length * colWidth, m1.length * colHeight, colHeight, xPercents[0], yPercents[0])
         // 添加箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g, [(m1[0].length + 0.1) * colWidth, (1 + m1.length / 2) * colHeight - colHeight / 2], 0.8 * colWidth, colHeight, arrowUrl)
 
     drawTableForColumn(g, m2, [(m1[0].length + 1) * colWidth, colHeight], colWidth, colHeight, t2_name, colFontSize, cellFontSize, outColor)
@@ -107,7 +107,7 @@ function transform_tables_sort(m1, m2, rule, t1_name, t2_name, outColor, name, s
     drawTableForRow(g, m1, [0, colHeight], colWidth, colHeight, t1_name, colFontSize, cellFontSize)
     drawPcentBar(g, [0, colHeight], m1[0].length * colWidth, m1.length * colHeight, colHeight, xPercents[0], yPercents[0])
         // 添加箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g, [(m1[0].length + 0.1) * colWidth, (1 + m1.length / 2) * colHeight - colHeight / 2], 0.8 * colWidth, colHeight, arrowUrl)
 
     let sortedCol = 0
@@ -119,7 +119,7 @@ function transform_tables_sort(m1, m2, rule, t1_name, t2_name, outColor, name, s
     }
     drawTableForRow(g, m2, [(m1[0].length + 1) * colWidth, colHeight], colWidth, colHeight, t2_name, colFontSize, cellFontSize, outColor, [], [], sortedCol)
     drawPcentBar(g, [(m1[0].length + 1) * colWidth, colHeight], m2[0].length * colWidth, m2.length * colHeight, colHeight, xPercents[1], yPercents[1])
-    let orderUrl = rule.indexOf("desc") === -1 ? require('../../images/asce.svg') : require('../../images/desc.svg')
+    let orderUrl = rule.indexOf("desc") === -1 ? 'assets/images/asce.svg' : 'assets/images/desc.svg'
 
     drawIcon(g, [(m1[0].length + 1.665 + sortedCol) * colWidth, 1.285 * colHeight], 0.38 * colWidth, 0.42 * colHeight, orderUrl)
     let yOfLine = (m1.length + 2) * colHeight
@@ -167,7 +167,7 @@ function transform_tables_fold(m1, m2, rule, t1_name, t2_name, inExpLen, name, s
     drawTableForFold(g, m1, [0, (m2.length - 1) / 2 * colHeight], colWidth, colHeight, t1_name, colFontSize, cellFontSize, inExpLen)
     drawPcentBar(g, [0, (m2.length - 1) / 2 * colHeight], m1[0].length * colWidth, m1.length * colHeight, colHeight, xPercents[0], yPercents[0])
 
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g, [(m1[0].length + 0.1) * colWidth, (1 + m1.length / 2) * colHeight + (m2.length - 3) / 2 * colHeight], 0.8 * colWidth, colHeight, arrowUrl)
 
     let tempColor = inExpLen > 2 ? [0, 1] : []
@@ -219,7 +219,7 @@ function transform_tables_unfold(m1, m2, rule, t1_name, t2_name, inExpLen, name,
     drawTableForColumn(g, m1, [0, colHeight], colWidth, colHeight, t1_name, colFontSize, cellFontSize)
     drawPcentBar(g, [0, colHeight], m1[0].length * colWidth, m1.length * colHeight, colHeight, xPercents[0], yPercents[0])
 
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g, [(m1[0].length + 0.1) * colWidth, (1 + m2.length / 2) * colHeight + (m1.length - 3) / 2 * colHeight], 0.8 * colWidth, colHeight, arrowUrl)
     drawTableForFold(g, m2, [(m1[0].length + 1) * colWidth, (m1.length - 1) / 2 * colHeight + (m2.length === 3 ? 0 : colHeight * 0.5)], colWidth, colHeight, t2_name, colFontSize, cellFontSize, inExpLen)
     drawPcentBar(g, [(m1[0].length + 1) * colWidth, (m1.length - 1) / 2 * colHeight + (m2.length === 3 ? 0 : colHeight * 0.5)], m2[0].length * colWidth, m2.length * colHeight, colHeight, xPercents[1], yPercents[1])

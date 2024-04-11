@@ -40,20 +40,22 @@
             "loader": {
               ".svg": "text"
             },
-            "scripts": []
+            "scripts": [
+              "src/assets/js/genVis.js"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2.5MB",
+                  "maximumError": "2.5MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "8kb",
+                  "maximumError": "14kb"
                 }
               ],
               "outputHashing": "all"

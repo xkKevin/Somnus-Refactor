@@ -46,11 +46,11 @@ export function create_table(matrix,rule,t1_name,name,showTableName,pos,xPercent
     // .attr('opacity','0.5')
 
     drawDashRect(g,[0,colHeight],matrix.length * colHeight,matrix[0].length * colWidth,"white")
-    
+
     // 添加加号和箭头
-    let plusUrl = require('../../images/add.svg')
+    let plusUrl = 'assets/images/add.svg'
     drawIcon(g,[0.1 * colWidth, 1.2 * colHeight],0.9 * matrix[0].length * colWidth,0.9 * matrix.length * colHeight,plusUrl)
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g,[(matrix[0].length + 0.1) * colWidth,(1 + matrix.length / 2) * colHeight - colHeight / 2],0.8 * colWidth, colHeight,arrowUrl)
 
     // drawTableForCreateTable(g,matrix,[(matrix[0].length + 1) * colWidth,colHeight],colWidth,colHeight,t1_name,colFontSize)

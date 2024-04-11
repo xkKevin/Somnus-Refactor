@@ -54,7 +54,7 @@ export function delete_table(matrix,rule,t1_name,name,showTableName,pos,xPercent
     drawTable(g,matrix,[],[0,colHeight],colWidth,colHeight,t1_name,colFontSize,cellFontSize,'col')
     drawPcentBar(g,[0,colHeight],matrix[0].length * colWidth,matrix.length * colHeight,colHeight,xPercents[0],yPercents[0])
     // 添加加号和箭头
-    let arrowUrl = require('../../images/arrow.svg')
+    let arrowUrl = 'assets/images/arrow.svg'
     drawIcon(g,[(matrix[0].length + 0.1) * colWidth,(1 + matrix.length / 2) * colHeight - colHeight / 2],0.8 * colWidth, colHeight,arrowUrl)
 
     drawDashRect(g,[(matrix[0].length + 1) * colWidth,colHeight],matrix.length * colHeight,matrix[0].length * colWidth)
