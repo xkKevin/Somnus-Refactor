@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>形状</title>
+    <g id="V2-2021-02-05" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.1">
+        <g id="1-create-tables备份" transform="translate(-34.000000, -83.000000)" fill="#43504F" fill-rule="nonzero">
+            <g id="编组" transform="translate(16.000000, 44.000000)">
+                <g id="新建" transform="translate(18.000000, 39.000000)">
+                    <path d="M33.75,3.75 L33.75,56.25 C33.75,58.3210678 32.0710678,60 30,60 C27.9289322,60 26.25,58.3210678 26.25,56.25 L26.25,3.75 C26.25,1.67893219 27.9289322,3.80448985e-16 30,0 C32.0710678,-3.80448985e-16 33.75,1.67893219 33.75,3.75 Z M60,30 C60,32.0710678 58.3210678,33.75 56.25,33.75 L3.75,33.75 C1.67893219,33.75 2.53632657e-16,32.0710678 0,30 C-2.53632657e-16,27.9289322 1.67893219,26.25 3.75,26.25 L56.25,26.25 C58.3210678,26.25 60,27.9289322 60,30 Z" id="形状"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,114 @@
+{
+  "dsl": [
+    {
+      "operation_rule": "Load table from \"input1.csv\"",
+      "output_table_file": "L4 (input1).csv",
+      "output_table_name": "input1",
+      "type": "create_tables",
+      "input_table_file": "*"
+    },
+    {
+      "operation_rule": "Load table from \"input2.csv\"",
+      "output_table_file": "L5 (input2).csv",
+      "output_table_name": "input2",
+      "type": "create_tables",
+      "input_table_file": "**"
+    },
+    {
+      "input_explicit_col": ["mult"],
+      "input_table_file": ["L5 (input2).csv", "L4 (input1).csv"],
+      "input_table_name": ["input2", "input1"],
+      "operation_rule": "Inner Join on mult",
+      "output_table_file": "L7 (TBL_3).csv",
+      "output_table_name": "TBL_3",
+      "type": "combine_tables_inner_join"
+    },
+    {
+      "input_explicit_col": ["value", "size"],
+      "input_table_file": "L7 (TBL_3).csv",
+      "input_table_name": "TBL_3",
+      "operation_rule": "Create total from value / size",
+      "output_explicit_col": ["total"],
+      "output_table_file": "L8 (TBL_1).csv",
+      "output_table_name": "TBL_1",
+      "type": "create_columns_mutate"
+    },
+    {
+      "input_explicit_col": ["total"],
+      "input_table_file": "L8 (TBL_1).csv",
+      "input_table_name": "TBL_1",
+      "operation_rule": "Keep rows where total>200",
+      "output_table_file": "L9 (TBL_1).csv",
+      "output_table_name": "TBL_1",
+      "type": "delete_rows_filter"
+    },
+    {
+      "input_explicit_col": ["value"],
+      "input_table_file": "L9 (TBL_1).csv",
+      "input_table_name": "TBL_1",
+      "operation_rule": "Delete value",
+      "output_table_file": "L10 (morpheus).csv",
+      "output_table_name": "morpheus",
+      "type": "delete_columns_select_remove"
+    },
+    {
+      "input_table_file": "L10 (morpheus).csv",
+      "input_table_name": "morpheus",
+      "operation_rule": "as.data.frame",
+      "output_table_file": "L11 (morpheus).csv",
+      "output_table_name": "morpheus",
+      "type": "identical_operation"
+    },
+    {
+      "input_explicit_col": ["size", "mult", "total"],
+      "input_table_file": "L11 (morpheus).csv",
+      "input_table_name": "morpheus",
+      "operation_rule": "Rearrange Columns",
+      "output_table_file": "L12 (morpheus).csv",
+      "output_table_name": "morpheus",
+      "type": "transform_tables_rearrange"
+    }
+  ],
+  "data_df": {
+    "L4 (input1).csv": [
+      ["size", "mult"],
+      ["1", "K"],
+      ["2", "M"],
+      ["3", "G"]
+    ],
+    "L5 (input2).csv": [
+      ["value", "mult"],
+      ["230", "K"],
+      ["128", "M"],
+      ["420", "G"]
+    ],
+    "L7 (TBL_3).csv": [
+      ["value", "mult", "size"],
+      ["230", "K", "1"],
+      ["128", "M", "2"],
+      ["420", "G", "3"]
+    ],
+    "L8 (TBL_1).csv": [
+      ["value", "mult", "size", "total"],
+      ["230", "K", "1", "230"],
+      ["128", "M", "2", "64"],
+      ["420", "G", "3", "140"]
+    ],
+    "L9 (TBL_1).csv": [
+      ["value", "mult", "size", "total"],
+      ["230", "K", "1", "230"]
+    ],
+    "L10 (morpheus).csv": [
+      ["mult", "size", "total"],
+      ["K", "1", "230"]
+    ],
+    "L11 (morpheus).csv": [
+      ["mult", "size", "total"],
+      ["K", "1", "230"]
+    ],
+    "L12 (morpheus).csv": [
+      ["size", "mult", "total"],
+      ["1", "K", "230"]
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>画板</title>
+    <g id="画板" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.8">
+        <g id="箭头备份" transform="translate(9.000000, 9.000000) scale(-1, 1) rotate(90.000000) translate(-9.000000, -9.000000) translate(1.000000, 1.000000)" fill-rule="nonzero">
+            <rect id="矩形" fill="#000000" opacity="0" x="0" y="0" width="16" height="16"></rect>
+            <path d="M8,15.5555 L14.22225,6.66675 L11.555375,6.66675 L11.555375,4.888875 L4.444375,4.888875 L4.444375,6.66675 L1.77775,6.66675 L8,15.5555 Z M11.555375,2.222125 L4.444375,2.222125 L4.444375,4 L11.555375,4 L11.555375,2.222125 Z M11.555375,0.4445 L4.444375,0.4445 L4.444375,1.33325 L11.555375,1.33325 L11.555375,0.4445 Z" id="形状" fill="#A6ABAB"></path>
+        </g>
+    </g>
+</svg>

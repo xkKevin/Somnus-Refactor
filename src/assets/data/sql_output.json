@@ -1,0 +1,600 @@
+{
+  "dsl": [
+    {
+      "function_id": "filter",
+      "source_column": "order_date",
+      "filter_type": "greater_than",
+      "keep": true,
+      "source_tables": ["orders"],
+      "target_tables": ["orders_filter_0"],
+      "arguments": "2024-01-01",
+      "equals1": true
+    },
+    {
+      "function_id": "add",
+      "source_column": "amount1",
+      "target_column": "amount1 + amount2",
+      "source_tables": ["orders_filter_0"],
+      "target_tables": ["orders_filter_0_add_1"],
+      "arguments": "amount2"
+    },
+    {
+      "function_id": "biz_rename",
+      "rename_type": "special_name",
+      "conditions": [
+        {
+          "source_column": "amount1 + amount2",
+          "target_column": "total_amount"
+        }
+      ],
+      "source_tables": ["orders_filter_0_add_1"],
+      "target_tables": ["orders_filter_0_add_1_biz_rename_2"]
+    },
+    {
+      "function_id": "keep_columns",
+      "column_type": "multiple",
+      "source_tables": ["orders_filter_0_add_1_biz_rename_2"],
+      "target_tables": ["subquery"],
+      "source_columns": ["product_name", "total_amount"]
+    },
+    {
+      "function_id": "filter",
+      "source_column": "total_amount",
+      "filter_type": "greater_than",
+      "keep": true,
+      "source_tables": ["subquery"],
+      "target_tables": ["subquery_filter_4"],
+      "arguments": "200",
+      "equals1": false
+    },
+    {
+      "function_id": "trim",
+      "source_column": "product_name",
+      "target_column": "trim(product_name)",
+      "source_tables": ["subquery_filter_4"],
+      "target_tables": ["subquery_filter_4_trim_5"]
+    },
+    {
+      "function_id": "round",
+      "source_column": "total_amount",
+      "target_column": "ROUND(total_amount, 1)",
+      "arguments": "1",
+      "source_tables": ["subquery_filter_4_trim_5"],
+      "target_tables": ["subquery_filter_4_trim_5_round_6"]
+    },
+    {
+      "function_id": "biz_rename",
+      "rename_type": "special_name",
+      "conditions": [
+        { "source_column": "trim(product_name)", "target_column": "product" }
+      ],
+      "source_tables": ["subquery_filter_4_trim_5_round_6"],
+      "target_tables": ["subquery_filter_4_trim_5_round_6_biz_rename_7"]
+    },
+    {
+      "function_id": "biz_rename",
+      "rename_type": "special_name",
+      "conditions": [
+        {
+          "source_column": "ROUND(total_amount, 1)",
+          "target_column": "total_amount"
+        }
+      ],
+      "source_tables": ["subquery_filter_4_trim_5_round_6_biz_rename_7"],
+      "target_tables": [
+        "subquery_filter_4_trim_5_round_6_biz_rename_7_biz_rename_8"
+      ]
+    },
+    {
+      "function_id": "keep_columns",
+      "column_type": "multiple",
+      "source_tables": [
+        "subquery_filter_4_trim_5_round_6_biz_rename_7_biz_rename_8"
+      ],
+      "target_tables": [
+        "subquery_filter_4_trim_5_round_6_biz_rename_7_biz_rename_8_keep_columns_9"
+      ],
+      "source_columns": ["product", "total_amount"]
+    },
+    {
+      "function_id": "order_by",
+      "source_column": "total_amount",
+      "asc": false,
+      "source_tables": [
+        "subquery_filter_4_trim_5_round_6_biz_rename_7_biz_rename_8_keep_columns_9"
+      ],
+      "target_tables": [
+        "subquery_filter_4_trim_5_round_6_biz_rename_7_biz_rename_8_keep_columns_9_order_by_10"
+      ]
+    }
+  ],
+  "data_df": {
+    "TYPE_CHECKING": false,
+    "has_numpy": true,
+    "orders": [
+      {
+        "customer_name": "Bob",
+        "product_name": "iPhone ",
+        "order_date": "2024-01-02",
+        "amount1": 100.2,
+        "amount2": 50.33
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "iPad",
+        "order_date": "2024-01-03",
+        "amount1": 75.12,
+        "amount2": 25
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": " MacBook",
+        "order_date": "2024-01-04",
+        "amount1": 200.1,
+        "amount2": 100
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "AirPods",
+        "order_date": "2024-01-05",
+        "amount1": 150,
+        "amount2": 50
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "iPhone",
+        "order_date": "2024-01-06",
+        "amount1": 50,
+        "amount2": 50
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "iPad",
+        "order_date": "2023-01-07",
+        "amount1": 100,
+        "amount2": 100
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "MacBook",
+        "order_date": "2023-01-08",
+        "amount1": 125,
+        "amount2": 75
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "AirPods ",
+        "order_date": "2024-01-09",
+        "amount1": 80.45,
+        "amount2": 20
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "iPhone",
+        "order_date": "2024-01-10",
+        "amount1": 90,
+        "amount2": 60.36
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "iPad ",
+        "order_date": "2024-01-11",
+        "amount1": 100,
+        "amount2": 50.15
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "MacBook",
+        "order_date": "2023-01-12",
+        "amount1": 70,
+        "amount2": 30
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "AirPods",
+        "order_date": "2024-01-13",
+        "amount1": 120,
+        "amount2": 80.66
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": " iPhone",
+        "order_date": "2024-01-14",
+        "amount1": 160.12,
+        "amount2": 40
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "iPad",
+        "order_date": "2023-01-15",
+        "amount1": 110.15,
+        "amount2": 90
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "MacBook",
+        "order_date": "2024-01-16",
+        "amount1": 95,
+        "amount2": 55
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "AirPods",
+        "order_date": "2024-01-17",
+        "amount1": 130,
+        "amount2": 70
+      }
+    ],
+    "orders_filter_0": [
+      {
+        "customer_name": "Bob",
+        "product_name": "iPhone ",
+        "order_date": "2024-01-02",
+        "amount1": 100.2,
+        "amount2": 50.33
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "iPad",
+        "order_date": "2024-01-03",
+        "amount1": 75.12,
+        "amount2": 25
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": " MacBook",
+        "order_date": "2024-01-04",
+        "amount1": 200.1,
+        "amount2": 100
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "AirPods",
+        "order_date": "2024-01-05",
+        "amount1": 150,
+        "amount2": 50
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "iPhone",
+        "order_date": "2024-01-06",
+        "amount1": 50,
+        "amount2": 50
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "AirPods ",
+        "order_date": "2024-01-09",
+        "amount1": 80.45,
+        "amount2": 20
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "iPhone",
+        "order_date": "2024-01-10",
+        "amount1": 90,
+        "amount2": 60.36
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "iPad ",
+        "order_date": "2024-01-11",
+        "amount1": 100,
+        "amount2": 50.15
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "AirPods",
+        "order_date": "2024-01-13",
+        "amount1": 120,
+        "amount2": 80.66
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": " iPhone",
+        "order_date": "2024-01-14",
+        "amount1": 160.12,
+        "amount2": 40
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "MacBook",
+        "order_date": "2024-01-16",
+        "amount1": 95,
+        "amount2": 55
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "AirPods",
+        "order_date": "2024-01-17",
+        "amount1": 130,
+        "amount2": 70
+      }
+    ],
+    "orders_filter_0_add_1": [
+      {
+        "customer_name": "Bob",
+        "product_name": "iPhone ",
+        "order_date": "2024-01-02",
+        "amount1": 100.2,
+        "amount2": 50.33,
+        "amount1 + amount2": 150.53
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "iPad",
+        "order_date": "2024-01-03",
+        "amount1": 75.12,
+        "amount2": 25,
+        "amount1 + amount2": 100.12
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": " MacBook",
+        "order_date": "2024-01-04",
+        "amount1": 200.1,
+        "amount2": 100,
+        "amount1 + amount2": 300.1
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "AirPods",
+        "order_date": "2024-01-05",
+        "amount1": 150,
+        "amount2": 50,
+        "amount1 + amount2": 200
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "iPhone",
+        "order_date": "2024-01-06",
+        "amount1": 50,
+        "amount2": 50,
+        "amount1 + amount2": 100
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "AirPods ",
+        "order_date": "2024-01-09",
+        "amount1": 80.45,
+        "amount2": 20,
+        "amount1 + amount2": 100.45
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "iPhone",
+        "order_date": "2024-01-10",
+        "amount1": 90,
+        "amount2": 60.36,
+        "amount1 + amount2": 150.36
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "iPad ",
+        "order_date": "2024-01-11",
+        "amount1": 100,
+        "amount2": 50.15,
+        "amount1 + amount2": 150.15
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "AirPods",
+        "order_date": "2024-01-13",
+        "amount1": 120,
+        "amount2": 80.66,
+        "amount1 + amount2": 200.66
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": " iPhone",
+        "order_date": "2024-01-14",
+        "amount1": 160.12,
+        "amount2": 40,
+        "amount1 + amount2": 200.12
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "MacBook",
+        "order_date": "2024-01-16",
+        "amount1": 95,
+        "amount2": 55,
+        "amount1 + amount2": 150
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "AirPods",
+        "order_date": "2024-01-17",
+        "amount1": 130,
+        "amount2": 70,
+        "amount1 + amount2": 200
+      }
+    ],
+    "orders_filter_0_add_1_biz_rename_2": [
+      {
+        "customer_name": "Bob",
+        "product_name": "iPhone ",
+        "order_date": "2024-01-02",
+        "amount1": 100.2,
+        "amount2": 50.33,
+        "total_amount": 150.53
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "iPad",
+        "order_date": "2024-01-03",
+        "amount1": 75.12,
+        "amount2": 25,
+        "total_amount": 100.12
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": " MacBook",
+        "order_date": "2024-01-04",
+        "amount1": 200.1,
+        "amount2": 100,
+        "total_amount": 300.1
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "AirPods",
+        "order_date": "2024-01-05",
+        "amount1": 150,
+        "amount2": 50,
+        "total_amount": 200
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "iPhone",
+        "order_date": "2024-01-06",
+        "amount1": 50,
+        "amount2": 50,
+        "total_amount": 100
+      },
+      {
+        "customer_name": "Alice",
+        "product_name": "AirPods ",
+        "order_date": "2024-01-09",
+        "amount1": 80.45,
+        "amount2": 20,
+        "total_amount": 100.45
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "iPhone",
+        "order_date": "2024-01-10",
+        "amount1": 90,
+        "amount2": 60.36,
+        "total_amount": 150.36
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "iPad ",
+        "order_date": "2024-01-11",
+        "amount1": 100,
+        "amount2": 50.15,
+        "total_amount": 150.15
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "AirPods",
+        "order_date": "2024-01-13",
+        "amount1": 120,
+        "amount2": 80.66,
+        "total_amount": 200.66
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": " iPhone",
+        "order_date": "2024-01-14",
+        "amount1": 160.12,
+        "amount2": 40,
+        "total_amount": 200.12
+      },
+      {
+        "customer_name": "Bob",
+        "product_name": "MacBook",
+        "order_date": "2024-01-16",
+        "amount1": 95,
+        "amount2": 55,
+        "total_amount": 150
+      },
+      {
+        "customer_name": "Charlie",
+        "product_name": "AirPods",
+        "order_date": "2024-01-17",
+        "amount1": 130,
+        "amount2": 70,
+        "total_amount": 200
+      }
+    ],
+    "subquery": [
+      { "product_name": "iPhone ", "total_amount": 150.53 },
+      { "product_name": "iPad", "total_amount": 100.12 },
+      { "product_name": " MacBook", "total_amount": 300.1 },
+      { "product_name": "AirPods", "total_amount": 200 },
+      { "product_name": "iPhone", "total_amount": 100 },
+      { "product_name": "AirPods ", "total_amount": 100.45 },
+      { "product_name": "iPhone", "total_amount": 150.36 },
+      { "product_name": "iPad ", "total_amount": 150.15 },
+      { "product_name": "AirPods", "total_amount": 200.66 },
+      { "product_name": " iPhone", "total_amount": 200.12 },
+      { "product_name": "MacBook", "total_amount": 150 },
+      { "product_name": "AirPods", "total_amount": 200 }
+    ],
+    "subquery_filter_4": [
+      { "product_name": " MacBook", "total_amount": 300.1 },
+      { "product_name": "AirPods", "total_amount": 200.66 },
+      { "product_name": " iPhone", "total_amount": 200.12 }
+    ],
+    "subquery_filter_4_trim_5": [
+      {
+        "product_name": " MacBook",
+        "total_amount": 300.1,
+        "trim(product_name)": "MacBook"
+      },
+      {
+        "product_name": "AirPods",
+        "total_amount": 200.66,
+        "trim(product_name)": "AirPods"
+      },
+      {
+        "product_name": " iPhone",
+        "total_amount": 200.12,
+        "trim(product_name)": "iPhone"
+      }
+    ],
+    "subquery_filter_4_trim_5_round_6": [
+      {
+        "product_name": " MacBook",
+        "total_amount": 300.1,
+        "trim(product_name)": "MacBook",
+        "ROUND(total_amount, 1)": 300.1
+      },
+      {
+        "product_name": "AirPods",
+        "total_amount": 200.66,
+        "trim(product_name)": "AirPods",
+        "ROUND(total_amount, 1)": 200.7
+      },
+      {
+        "product_name": " iPhone",
+        "total_amount": 200.12,
+        "trim(product_name)": "iPhone",
+        "ROUND(total_amount, 1)": 200.1
+      }
+    ],
+    "subquery_filter_4_trim_5_round_6_biz_rename_7": [
+      {
+        "product_name": " MacBook",
+        "total_amount": 300.1,
+        "product": "MacBook",
+        "ROUND(total_amount, 1)": 300.1
+      },
+      {
+        "product_name": "AirPods",
+        "total_amount": 200.66,
+        "product": "AirPods",
+        "ROUND(total_amount, 1)": 200.7
+      },
+      {
+        "product_name": " iPhone",
+        "total_amount": 200.12,
+        "product": "iPhone",
+        "ROUND(total_amount, 1)": 200.1
+      }
+    ],
+    "subquery_filter_4_trim_5_round_6_biz_rename_7_biz_rename_8": [
+      {
+        "product_name": " MacBook",
+        "total_amount": 300.1,
+        "product": "MacBook"
+      },
+      {
+        "product_name": "AirPods",
+        "total_amount": 200.7,
+        "product": "AirPods"
+      },
+      { "product_name": " iPhone", "total_amount": 200.1, "product": "iPhone" }
+    ]
+  }
+}

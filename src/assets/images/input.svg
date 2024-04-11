@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>导出</title>
+    <g id="系统图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="系统图last" transform="translate(-28.000000, -118.000000)" fill="#FF9F69" fill-rule="nonzero">
+            <g id="编组-4备份" transform="translate(17.000000, 112.000000)">
+                <g id="导出" transform="translate(11.000000, 6.000000)">
+                    <path d="M7,5 L7,0 L5,0 L5,5 L2,5 L6,9 L10,5 L7,5 Z M0,5 L1,5 L1,12 L0,12 L0,5 Z M11,5 L12,5 L12,12 L11,12 L11,5 Z M12,11 L12,12 L0,12 L0,11 L12,11 Z" id="形状"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

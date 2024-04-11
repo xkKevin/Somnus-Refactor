@@ -3,7 +3,12 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
-    "strict": true,
+    // "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/assets/*": ["src/assets/*"]
+    },
+    "resolveJsonModule": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
