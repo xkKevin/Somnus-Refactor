@@ -1,4 +1,4 @@
-import {tableRender} from '@/assets/js/config/config'
+import {tableRender} from '@assets/js/config/config'
 export function drawDashRect(g,pos,height,width,color='none') {
     g.append('rect')
         .attr('x',pos[0])

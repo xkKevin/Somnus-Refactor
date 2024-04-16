@@ -1,5 +1,5 @@
 //参数：g、explicit\implicit列、单元格的长和宽
-import {tableRender} from '@/assets/js/config/config'
+import {tableRender} from '@assets/js/config/config'
 export function drawHighLightCol(g,matrix,expOrImpCols,pos,colWidth,colHeight,borderColor='#92D882') {
     expOrImpCols = Array.from(new Set(expOrImpCols))
     let highlightCols = []

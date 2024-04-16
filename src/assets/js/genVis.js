@@ -1,114 +1,115 @@
 import * as d3 from "d3";
 import ELK from "elkjs";
-import { create_table } from "@/assets/js/glyph/createTables";
-import { create_row, create_row_insert } from "@/assets/js/glyph/createRows";
-import { delete_table } from "@/assets/js/glyph/deleteTables";
+
+import { create_table } from "@assets/js/glyph/createTables";
+import { create_row, create_row_insert } from "@assets/js/glyph/createRows";
+import { delete_table } from "@assets/js/glyph/deleteTables";
 import {
   create_column,
   create_column_create,
-} from "@/assets/js/glyph/createColumns";
+} from "@assets/js/glyph/createColumns";
 import {
   delete_column,
   delete_dropna,
   delete_duplicate,
-} from "@/assets/js/glyph/deleteColumns";
+} from "@assets/js/glyph/deleteColumns";
 import {
   delete_duplicate_row_partColumn,
   delete_filter,
   delete_row,
-} from "@/assets/js/glyph/deleteRows";
+} from "@assets/js/glyph/deleteRows";
 import {
   transform_tables_fold,
   transform_tables_rearrange,
   transform_tables_sort,
   transform_tables_unfold,
-} from "@/assets/js/glyph/transformTables";
+} from "@assets/js/glyph/transformTables";
 import {
   transform_columns_mutate,
   transform_columns_replace_na,
-} from "@/assets/js/glyph/transformColumns";
-import { combine_columns_merge } from "@/assets/js/glyph/combineColumns";
+} from "@assets/js/glyph/transformColumns";
+import { combine_columns_merge } from "@assets/js/glyph/combineColumns";
 import {
   combine_rows_interpolate,
   combine_rows_sum,
-} from "@/assets/js/glyph/combineRows";
-import { transform_rows_edit } from "@/assets/js/glyph/transformRows";
+} from "@assets/js/glyph/combineRows";
+import { transform_rows_edit } from "@assets/js/glyph/transformRows";
 import {
   separate_tables_decompose,
   separate_tables_split,
   separate_tables_subset,
-} from "@/assets/js/glyph/separateTables";
-import { separate_columns } from "@/assets/js/glyph/separateColumns";
-import { separate_rows } from "@/assets/js/glyph/separateRows";
+} from "@assets/js/glyph/separateTables";
+import { separate_columns } from "@assets/js/glyph/separateColumns";
+import { separate_rows } from "@assets/js/glyph/separateRows";
 import {
   combine_tables_extend,
   combine_tables_full_join,
   combine_tables_inner_join,
   combine_tables_left_join,
-} from "@/assets/js/glyph/combineTables";
-import { generateDataForCreateTable } from "@/assets/js/utils/genDataForCreateTables";
+} from "@assets/js/glyph/combineTables";
+import { generateDataForCreateTable } from "@assets/js/utils/genDataForCreateTables";
 import {
   generateData,
   generateDataForCreateColumns,
   generateDataForCreateColumns_create,
   generateDataForCreateColumns_extract,
-} from "@/assets/js/utils/genDataForCreateColumns";
-import { generateDataForInsertRows } from "@/assets/js/utils/genDataForCreateRows";
+} from "@assets/js/utils/genDataForCreateColumns";
+import { generateDataForInsertRows } from "@assets/js/utils/genDataForCreateRows";
 import {
   generateDataForDeleteColumn,
   generateDataForDeleteNaColumn,
   generateDataForKeepColumns,
-} from "@/assets/js/utils/genDataForDeleteColumns";
-import { getDuplicatedColumns } from "@/assets/js/utils/common/getDuplicatedColumns";
+} from "@assets/js/utils/genDataForDeleteColumns";
+import { getDuplicatedColumns } from "@assets/js/utils/common/getDuplicatedColumns";
 import {
   generateDataForDeleteDuplicateRows,
   generateDataForFilterRow,
   generateDataForRows,
-} from "@/assets/js/utils/genDataForDeleteRows";
+} from "@assets/js/utils/genDataForDeleteRows";
 import {
   generateDataForColumnRearrange,
   generateDataForFold,
   generateDataForTableSort,
-} from "@/assets/js/utils/genDataForTransformTable";
+} from "@assets/js/utils/genDataForTransformTable";
 import {
   generateDataForColumnRename,
   generateDataForMutate_cover,
   generateDataForReplace,
-} from "@/assets/js/utils/genDataForTransformColumns";
-import { generateDataForMergeColumns } from "@/assets/js/utils/genDataForCombineColumns";
+} from "@assets/js/utils/genDataForTransformColumns";
+import { generateDataForMergeColumns } from "@assets/js/utils/genDataForCombineColumns";
 import {
   generateDataForGroupSummarize,
   generateDataForRowInterpolate,
-} from "@/assets/js/utils/genDataForCombineRows";
-import { generateDataForEditRow } from "@/assets/js/utils/genDataForTransformRows";
+} from "@assets/js/utils/genDataForCombineRows";
+import { generateDataForEditRow } from "@assets/js/utils/genDataForTransformRows";
 import {
   generateDataForSeparateDecompose,
   generateDataForSeparateDecompose_q,
   generateDataForSeparateSplit,
   generateDataForSeparateSubset,
-} from "@/assets/js/utils/genDataForSeparateTables";
-import { generateDataForSeparateColumn } from "@/assets/js/utils/genDataForSeparateColumns";
-import { generateDataForSeparateRows } from "@/assets/js/utils/genDataForSeparateRows";
+} from "@assets/js/utils/genDataForSeparateTables";
+import { generateDataForSeparateColumn } from "@assets/js/utils/genDataForSeparateColumns";
+import { generateDataForSeparateRows } from "@assets/js/utils/genDataForSeparateRows";
 import {
   generateDataForFullJoin_2,
   generateDataForInnerJoin,
   generateDataForLeftJoin_2,
   generateDataForTablesExtend_withExplicitCol,
-} from "@/assets/js/utils/genDataForCombineTables";
-import { identical_operation } from "@/assets/js/glyph/identicalOperation";
-import { getGraphs } from "@/assets/js/utils/renderTree/getLayout";
-import { drawNode, drawEdge } from "@/assets/js/utils/renderTree/render";
-import { getComponents } from "@/assets/js/utils/renderTree/getComponents";
-import { svgSize, nodeSize } from "@/assets/js/config/config";
+} from "@assets/js/utils/genDataForCombineTables";
+import { identical_operation } from "@assets/js/glyph/identicalOperation";
+import { getGraphs } from "@assets/js/utils/renderTree/getLayout";
+import { drawNode, drawEdge } from "@assets/js/utils/renderTree/render";
+import { getComponents } from "@assets/js/utils/renderTree/getComponents";
+import { svgSize, nodeSize } from "@assets/js/config/config";
 
 import {
   generateDataForTablesConcat,
   generateDataForSummarize_python,
-} from "@/assets/js/utils/generateDataForPython";
+} from "@assets/js/utils/generateDataForPython";
 import {
   combine_tables_extend_axis0,
   combine_tables_extend_axis1,
-} from "@/assets/js/glyph/glyphs_for_python";
+} from "@assets/js/glyph/glyphs_for_python";
 
 function getTableInfo(data_df) {
   var tableInf = {};
@@ -120,6 +121,9 @@ function getTableInfo(data_df) {
 
 function genVis(dsl, data_df) {
   console.log(dsl, data_df);
+
+
+
   var specsToHandle = Array.from(dsl);
   for (let idx = 0; idx < specsToHandle.length; idx++) {
     if (specsToHandle[idx].type === "separate_tables_decompose") {
@@ -487,18 +491,10 @@ function genVis(dsl, data_df) {
             input_explicit_col.concat(input_implicit_col),
             output_explicit_col
           );
-          if (
-            transform_specs[i].input_table_file === "L6 (wb_tens).csv" &&
-            transform_specs[i].output_table_file === "L7 (wb_tens).csv"
-          ) {
-            res.m1[2][1] = "M";
-            res.m1[3][1] = "H";
-
-            res.m2[2][1] = "M";
-            res.m2[3][1] = "H";
-            res.m2[2][2] = "16";
-            res.m2[3][2] = "17";
-          }
+          // console.log(dataIn1_csv,
+          //   dataOut1_csv,
+          //   input_explicit_col.concat(input_implicit_col),
+          //   output_explicit_col, res);
           create_column(
             res.m1,
             res.m2,

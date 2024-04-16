@@ -3,7 +3,7 @@
 //insertPos表示插入行的位置
 //keepPos表示保存行的位置
 //deletePos表示删除列的位置
-import { tableRender } from '@/assets/js/config/config'
+import { tableRender } from '@assets/js/config/config'
 export function drawTableForRow(g, matrix, pos, colWidth, colHeight, table_name, colFontSize = 1.5, cellFontSize = 1, rowColor = [], naRow = [], naCol = [], sortCol = '') {
     let colors = tableRender.colors
         // g.append('text')

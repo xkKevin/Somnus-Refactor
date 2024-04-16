@@ -40,9 +40,7 @@
             "loader": {
               ".svg": "text"
             },
-            "scripts": [
-              "src/assets/js/genVis.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {

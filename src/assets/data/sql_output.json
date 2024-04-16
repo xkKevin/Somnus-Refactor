@@ -109,8 +109,6 @@
     }
   ],
   "data_df": {
-    "TYPE_CHECKING": false,
-    "has_numpy": true,
     "orders": [
       {
         "customer_name": "Bob",

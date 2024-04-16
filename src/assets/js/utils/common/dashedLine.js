@@ -1,4 +1,4 @@
-import {tableRender} from '@/assets/js/config/config'
+import {tableRender} from '@assets/js/config/config'
 export function drawLine(g,startPos,endPos,dashed = false) {
     var line = g.append("line")
         .attr("x1", startPos[0])

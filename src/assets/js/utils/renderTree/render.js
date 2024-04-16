@@ -1,4 +1,4 @@
-import { nodeSize, lineAttr } from '@/assets/js/config/config'
+import { nodeSize, lineAttr } from '@assets/js/config/config'
 
 
 function drawNode(g, specs, nodePos, specsInf) {

@@ -1,9 +1,11 @@
 import { AfterViewInit, Component } from '@angular/core';
 import * as d3 from 'd3';
 
-import {genVis, drawBarChart} from '../../assets/js/genVis';
-// import * as data from '../../assets/data/sql_output.json'
-import * as data from '../../assets/data/somnus.json';
+import {genVis} from '@assets/js/genVis';
+import {format_data} from "@assets/js/format2Somnus"
+// import * as data from '@assets/data/spark_output.json'
+import * as data from '@assets/data/sql_output.json'
+// import * as data from '@assets/data/somnus.json';
 
 @Component({
   selector: 'app-generate-vis',
@@ -23,7 +25,9 @@ export class GenerateVisComponent implements AfterViewInit {
 
     // drawBarChart()
 
-    genVis(data.dsl, data.data_df)
+    // genVis(data.dsl, data.data_df)
+    var somnus_data = format_data(data)
+    genVis(somnus_data.dsl, somnus_data.data_df)
 
   }
 }

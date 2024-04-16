@@ -1,4 +1,4 @@
-import {nodeSize,svgSize} from '@/assets/js/config/config'
+import {nodeSize,svgSize} from '@assets/js/config/config'
 
 function getLayout(specs){
 
