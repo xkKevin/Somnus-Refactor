@@ -120,9 +120,8 @@ function getTableInfo(data_df) {
 }
 
 function genVis(dsl, data_df) {
-  console.log(dsl, data_df);
-
-
+  console.log("dsl: ", dsl);
+  console.log("data_df: ", data_df);
 
   var specsToHandle = Array.from(dsl);
   for (let idx = 0; idx < specsToHandle.length; idx++) {
@@ -159,7 +158,7 @@ function genVis(dsl, data_df) {
 
   let graphs = getGraphs(groups, edges);
 
-  console.log(graphs);
+  // console.log("graphs: ", graphs);
 
   let svgWidth = 0,
     svgHeight = 0;
@@ -220,7 +219,7 @@ function genVis(dsl, data_df) {
       yOffset = yOffset + maxY + 1.2 * parseInt(nodeSize.height);
     }
 
-    console.log(specsToHandle, nodePos);
+    // console.log("nodePos", nodePos);
     const g = d3.select("#mainsvg").append("g");
     drawEdge(g, specsToHandle, nodePos);
     drawNode(g, specsToHandle, nodePos, getTableInfo(data_df));
@@ -1753,6 +1752,8 @@ function genVis(dsl, data_df) {
           );
           break;
       }
+      console.log("step:", i, "trans type: ", transform_specs[i].type);
+      console.log("res: ", JSON.stringify(res));
     }
 
     svgPanZoom("#mainsvg");

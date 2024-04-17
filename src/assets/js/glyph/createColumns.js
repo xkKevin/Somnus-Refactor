@@ -10,7 +10,7 @@ import { drawPcentBar } from '../utils/common/pcentBar'
 
 function create_column(m1, m2, rule, t1_name, t2_name, inExp, outExp, name, showTableName, pos, xPercents, yPercents) {
 
-
+console.log(m1, m2, rule, t1_name, t2_name, inExp, outExp, name, showTableName, pos, xPercents, yPercents);
     if (!showTableName) {
         t1_name = ''
         t2_name = ''

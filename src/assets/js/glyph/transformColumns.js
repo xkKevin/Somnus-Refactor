@@ -77,7 +77,7 @@ function transform_columns_mutate(m1, m2, rule, t1_name, t2_name, inExpOrImp, ou
         t1_name = ''
         t2_name = ''
     }
-    console.log(m1, m2, rule, t1_name, t2_name, inExpOrImp, outExpOrImp, name, showTableName, pos, xPercents, yPercents);
+    // console.log(m1, m2, rule, t1_name, t2_name, inExpOrImp, outExpOrImp, name, showTableName, pos, xPercents, yPercents);
     let width = svgSize.width
     let height = svgSize.height
     let colWidth = width / (m2[0].length * 2 + 1)
@@ -122,7 +122,7 @@ function transform_columns_mutate(m1, m2, rule, t1_name, t2_name, inExpOrImp, ou
 
 
     let inColLenAndMid = drawHighLightCol(g, m1, inExpOrImp, [0, colHeight], colWidth, colHeight)
-    console.log("transform", inColLenAndMid, m1, inExpOrImp, [0, colHeight], colWidth, colHeight);
+    // console.log("transform", inColLenAndMid, m1, inExpOrImp, [0, colHeight], colWidth, colHeight);
     let yOfLine = (m1.length + 2) * colHeight
         //画两个表之间的连线
     if (inColLenAndMid.len != 0) {

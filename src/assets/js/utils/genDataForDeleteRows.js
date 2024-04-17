@@ -12,7 +12,7 @@ function cmpRows(r1, r2, inExpCols) {
 }
 
 function generateDataForRows(dataIn1_csv, dataOut1_csv, inExpCols) {
-    console.log(dataIn1_csv, dataOut1_csv, inExpCols);
+    // console.log(dataIn1_csv, dataOut1_csv, inExpCols);
     let contextualCols = extractCols(Array.from(dataIn1_csv[0]), inExpCols, inExpCols)
 
     let m1 = [
@@ -374,7 +374,7 @@ function generateDataForDeleteDuplicateRows(dataIn1_csv, dataOut1_csv, inExpCols
     //         let tempRow = []
     //         for(let col = 0;col < Math.min(3,m1[0].length);col++){
     //             if(row === 0)tempRow.push("")
-    //             else    
+    //             else
     //                 tempRow.push(m1[row][col])
     //         }
     //         m1[row] = tempRow
@@ -384,7 +384,7 @@ function generateDataForDeleteDuplicateRows(dataIn1_csv, dataOut1_csv, inExpCols
     //         let tempRow = []
     //         for(let col = 0;col < Math.min(3,m2[0].length);col++){
     //             if(row === 0)tempRow.push("")
-    //             else    
+    //             else
     //                 tempRow.push(m2[row][col])
     //         }
     //         m2[row] = tempRow
@@ -394,9 +394,9 @@ function generateDataForDeleteDuplicateRows(dataIn1_csv, dataOut1_csv, inExpCols
     //         for(let row = m2.length - 1;row >= 0;row--){
     //             let tempRow = []
     //             for(let col = 0;col < Math.min(3,m2[0].length);col++){
-    //                 if(m2[0][col] !== ''){ 
+    //                 if(m2[0][col] !== ''){
     //                     tempRow.push(m2[row][col])
-    //                 } 
+    //                 }
     //             }
     //             m2[row] = tempRow
     //         }

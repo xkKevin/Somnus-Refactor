@@ -5,12 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TestComponent } from './test/test.component';
 import { GenerateVisComponent } from './generate-vis/generate-vis.component';
+import { RefactoringVisComponent } from './refactoring-vis/refactoring-vis.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TestComponent,
-    GenerateVisComponent
+    GenerateVisComponent,
+    RefactoringVisComponent
   ],
   imports: [
     BrowserModule,
