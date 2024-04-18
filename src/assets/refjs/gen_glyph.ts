@@ -20,16 +20,18 @@ function draw_highight_col(g, rowNum, hlCols, posi: Rect, shape: Rect, borderCol
     start = end
   }
 
+  let rectStrokeWidth = tableRender.rectStrokeWidth
+
   for (let group = 0; group < highlightCols.length; group++) {
     //高亮框
     g.append('rect')
-      .attr('width', (highlightCols[group][1] - highlightCols[group][0] + 1) * shape.x - 1)
-      .attr('height', shape.y * rowNum - 1)
-      .attr('stroke-width', '1.6px')
+      .attr('width', (highlightCols[group][1] - highlightCols[group][0] + 1) * shape.x - rectStrokeWidth)
+      .attr('height', shape.y * rowNum - rectStrokeWidth)
+      .attr('stroke-width', `${rectStrokeWidth}px`)
       .attr('stroke', borderColor)
       .attr('fill', 'none')
-      .attr('x', posi.x + highlightCols[group][0] * shape.x + 0.5)
-      .attr('y', posi.y + 0.5)
+      .attr('x', posi.x + highlightCols[group][0] * shape.x + rectStrokeWidth / 2)
+      .attr('y', posi.y + rectStrokeWidth / 2)
 
     //每个组的竖线
     g.append("line")
@@ -341,7 +343,8 @@ export function draw_glyph(step: number, posi: Rect, vis: VisData) {
   let tblPosi = compute_tbl_posi(colNum, rowNum, cellWidth, cellHeight)
 
   let arrowUrl = 'assets/images/arrow.svg'
-  draw_icon(g, arrowUrl, { x: tblPosi.inColMax + 1, y: cellHeight + 1 }, { x: 0.9 * cellWidth, y: 0.9 * cellHeight }, { x: cellWidth, y: tblPosi.rowMax - cellHeight })
+  let arrow_width = d3.min([3.4 * Math.sqrt(cellWidth), cellWidth - 2])
+  draw_icon(g, arrowUrl, { x: tblPosi.inColMax + 1, y: cellHeight + 1 }, { x: arrow_width, y: arrow_width }, { x: cellWidth, y: tblPosi.rowMax - cellHeight })
 
   let plusUrl = 'assets/images/add.svg'
 
@@ -380,7 +383,9 @@ export function draw_glyph(step: number, posi: Rect, vis: VisData) {
   }
   if (emptyDashPosi) {
     draw_dash_rect(tmpG, emptyDashPosi, rectShape)
-    draw_icon(tmpG, plusUrl, emptyDashPosi, { x: scaleIcon * rectShape.x, y: scaleIcon * rectShape.y }, rectShape)
+    if (vis.type < 3) {
+      draw_icon(tmpG, plusUrl, emptyDashPosi, { x: scaleIcon * rectShape.x, y: scaleIcon * rectShape.y }, rectShape)
+    }
   }
 
   let inColLenAndMid, outColLenAndMid;
@@ -388,7 +393,6 @@ export function draw_glyph(step: number, posi: Rect, vis: VisData) {
     draw_table(leftG, tbl, vis.arrange, tblPosi.in[ti], { x: cellWidth, y: cellHeight })
     if (tbl.linkCol && tbl.linkCol.length) {
       inColLenAndMid = draw_highight_col(leftG, tbl.data.length, tbl.linkCol, tblPosi.in[ti], { x: cellWidth, y: cellHeight })
-      console.log("inColLenAndMid", inColLenAndMid);
     }
   })
   let yOfLine: number = tblPosi.rowMax + cellHeight
@@ -406,8 +410,8 @@ export function draw_glyph(step: number, posi: Rect, vis: VisData) {
   })
 
   if (showRule) {
-    let maxLetter = (width - cellWidth) * 2.36 / (cellWidth / 3.5)
-    draw_text(g, `${vis.rule}`, maxLetter, (cellWidth / 3.5), { x: width / 2, y: yOfLine }, { x: 0, y: cellHeight / 1.2 }, "middle", "black")
+    let maxLetter = width * 2.36 / fontSize.ruleFontSize - 4
+    draw_text(g, vis.rule, maxLetter, fontSize.ruleFontSize, { x: width / 2, y: height - 14 + 0.4 * tblPosi.rowMax / cellHeight }, { x: 0, y: 0 }, "middle", "black")
   }
 
   let svgBox;

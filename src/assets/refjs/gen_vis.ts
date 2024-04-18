@@ -18,7 +18,7 @@ export function gen_vis() {
         name: "input1, input1,input12,23",
         color: [0, 1],
         scale: {
-          x: 0.2,
+          x: 0.2,  // 展示出来的列数 / 原表的列数
           y: 0.5
         },
         linkCol: [0, 1]
@@ -27,12 +27,12 @@ export function gen_vis() {
     out: [{
       data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
       name: "output2nput1, input1,input12,1234",
-      color: [0, 1, 2],
+      color: [0, 2, 2],
       scale: {
         x: 0.2,
         y: 0.3
       },
-      linkCol: [0, 2]
+      linkCol: [1]
     }],
     rule: 'create_columns_mutatecreate_columns_mutatecr',
     type: TransformType.CreateColumns,
@@ -99,18 +99,18 @@ export function gen_vis() {
           x: 0.2,
           y: 0.5
         },
-        linkCol: [0, 2]
+        // linkCol: [0, 2]
       }
     ],
     out: [{
-      data: [["", "order_date", ""], ["", "2024-01-02", ""]],
+      data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""]],
       name: "example_output",
       color: [2, 1, 0],
       scale: {
         x: 0.2,
         y: 0.3
       },
-      linkCol: [0]
+      // linkCol: [0]
     }],
     rule: 'Example Explanation',
     type: TransformType.DeleteRows,
@@ -239,7 +239,30 @@ export function gen_vis() {
     out: [],
     rule: 'create_columns_mutatecreate_columns_mutatecr',
     type: TransformType.DeleteTables,
-    arrange: Arrange.Col
+    arrange: Arrange.Row
+  }, {
+    in: [{
+      data: [["", "", "total"], ["", "", "230"], ["", "", "64"], ["", "", "140"]],
+      name: "output2nput1, input1,input12,1234",
+      color: [2, 1, 0],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      }
+    }
+    ],
+    out: [{
+      data: [["", "", "total"], ["", "", "230"]],
+      name: "input1, input1,input12,23",
+      color: [0, 1, 2],
+      scale: {
+        x: 0.2,
+        y: 0.5
+      }
+    }],
+    rule: 'create_columns_mutatecreate_columns_mutatecr',
+    type: TransformType.DeleteRows,
+    arrange: Arrange.Row
   }]
 
   visData2.forEach((vis, i) => {

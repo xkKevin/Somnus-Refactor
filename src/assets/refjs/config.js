@@ -5,6 +5,7 @@ const svgSize = {
 const fontSize = {
   colFontSize: 5,
   cellFontSize: 5,
+  ruleFontSize: 11,
 };
 
 const nodeSize = {
@@ -26,6 +27,7 @@ const lineAttr = {
 const tableRender = {
   firstRowColor: "#43504F",
   strokeColor: "#767979",
+  rectStrokeWidth: 1.8,
   colors: [
     "#5AABAC",
     "#F07A66",

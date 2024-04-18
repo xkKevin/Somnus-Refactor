@@ -1,6 +1,9 @@
 # TransformVis
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.3.
+Angular CLI: 17.3.3
+Node: 20.12.1
+Package Manager: npm 10.5.0
 
 ## Development server
 
