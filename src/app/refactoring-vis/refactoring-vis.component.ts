@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { gen_vis } from '@assets/refjs/gen_vis'
-
+import { gen_data } from "@assets/refjs/gen_data"
+import * as data from '@assets/data/sql_output.json'
 
 @Component({
   selector: 'app-refactoring-vis',
@@ -9,6 +10,8 @@ import { gen_vis } from '@assets/refjs/gen_vis'
 })
 export class RefactoringVisComponent implements AfterViewInit {
   ngAfterViewInit(): void {
+
+    var somnusdata = gen_data(data)
 
     // gen_vis(data) {}
     // data.dsl
