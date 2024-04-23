@@ -125,14 +125,14 @@ function convert2TableArray(tbl) {
 						filterRuleCHN += "Unknow rule"
                 }
                 var filter_dsl = {
-                    "input_explicit_col": [step.source_column],
-                    "input_table_name": step.source_tables[0],
-					"input_table_file": step.source_tables[0],
-                    "operation_rule": filterRule,
-                    "operation_rule_chn": filterRuleCHN,
-                    "output_table_name": step.target_tables[0],
-					"output_table_file": step.target_tables[0],
-                    "type": "delete_rows_filter"
+                    input_explicit_col: [step.source_column],
+                    input_table_name: step.source_tables[0],
+					input_table_file: step.source_tables[0],
+                    operation_rule: filterRule,
+                    operation_rule_chn: filterRuleCHN,
+                    output_table_name: step.target_tables[0],
+					output_table_file: step.target_tables[0],
+                    type: "delete_rows_filter"
                 }
 				somnus_dsl.push(filter_dsl)
               break;
@@ -144,13 +144,13 @@ function convert2TableArray(tbl) {
 					source_column.push(step.arguments)
 				}
 				var mutate_dsl = {
-                    "input_explicit_col": source_column,
-                    "input_table_name": step.source_tables[0],
-                    "operation_rule": "Mutate: " + step.target_column + " = " + step.source_column + " + " + step.arguments,
-                    "operation_rule_chn": step.target_column + "由" + step.source_column + " + " + step.arguments + "生成",
-                    "output_explicit_col": [step.target_column],
-					"output_table_name": step.target_tables[0],
-					"type": "create_columns_mutate"
+                    input_explicit_col: source_column,
+                    input_table_name: step.source_tables[0],
+                    operation_rule: "Mutate: " + step.target_column + " = " + step.source_column + " + " + step.arguments,
+                    operation_rule_chn: step.target_column + "由" + step.source_column + " + " + step.arguments + "生成",
+                    output_explicit_col: [step.target_column],
+					output_table_name: step.target_tables[0],
+					type: "create_columns_mutate"
                 }
 				somnus_dsl.push(mutate_dsl)
 				break;
@@ -161,13 +161,13 @@ function convert2TableArray(tbl) {
 					source_column.push(step.arguments)
 				}
 				var mutate_dsl = {
-                    "input_explicit_col": source_column,
-                    "input_table_name": step.source_tables[0],
-                    "operation_rule": "Mutate: " + step.target_column + " = " + step.source_column + " - " + step.arguments,
-                    "operation_rule_chn": step.target_column + "由" + step.source_column + " - " + step.arguments + "生成",
-                    "output_explicit_col": [step.target_column],
-					"output_table_name": step.target_tables[0],
-					"type": "create_columns_mutate"
+                    input_explicit_col: source_column,
+                    input_table_name: step.source_tables[0],
+                    operation_rule: "Mutate: " + step.target_column + " = " + step.source_column + " - " + step.arguments,
+                    operation_rule_chn: step.target_column + "由" + step.source_column + " - " + step.arguments + "生成",
+                    output_explicit_col: [step.target_column],
+					output_table_name: step.target_tables[0],
+					type: "create_columns_mutate"
                 }
 				somnus_dsl.push(mutate_dsl)
 				break;
@@ -178,13 +178,13 @@ function convert2TableArray(tbl) {
 					source_column.push(step.arguments)
 				}
 				var mutate_dsl = {
-                    "input_explicit_col": source_column,
-                    "input_table_name": step.source_tables[0],
-                    "operation_rule": "Mutate: " + step.target_column + " = " + step.source_column + " * " + step.arguments,
-                    "operation_rule_chn": step.target_column + "由" + step.source_column + " * " + step.arguments + "生成",
-                    "output_explicit_col": [step.target_column],
-					"output_table_name": step.target_tables[0],
-					"type": "create_columns_mutate"
+                    input_explicit_col: source_column,
+                    input_table_name: step.source_tables[0],
+                    operation_rule: "Mutate: " + step.target_column + " = " + step.source_column + " * " + step.arguments,
+                    operation_rule_chn: step.target_column + "由" + step.source_column + " * " + step.arguments + "生成",
+                    output_explicit_col: [step.target_column],
+					output_table_name: step.target_tables[0],
+					type: "create_columns_mutate"
                 }
 				somnus_dsl.push(mutate_dsl)
 				break;
@@ -195,13 +195,13 @@ function convert2TableArray(tbl) {
 					source_column.push(step.arguments)
 				}
 				var mutate_dsl = {
-                    "input_explicit_col": source_column,
-                    "input_table_name": step.source_tables[0],
-                    "operation_rule": "Mutate: " + step.target_column + " = " + step.source_column + " / " + step.arguments,
-                    "operation_rule_chn": step.target_column + "由" + step.source_column + " / " + step.arguments + "生成",
-                    "output_explicit_col": [step.target_column],
-					"output_table_name": step.target_tables[0],
-					"type": "create_columns_mutate"
+                    input_explicit_col: source_column,
+                    input_table_name: step.source_tables[0],
+                    operation_rule: "Mutate: " + step.target_column + " = " + step.source_column + " / " + step.arguments,
+                    operation_rule_chn: step.target_column + "由" + step.source_column + " / " + step.arguments + "生成",
+                    output_explicit_col: [step.target_column],
+					output_table_name: step.target_tables[0],
+					type: "create_columns_mutate"
                 }
 				somnus_dsl.push(mutate_dsl)
 				break;
@@ -339,9 +339,31 @@ function convert2TableArray(tbl) {
 					operation_rule_chn: keep_rule_chn
 				}
 				somnus_dsl.push(keep_columns_dsl)
-				console.log("keep_columns");
 				break;
-            default:
+            // transform_tables_sort
+			case "order_by":
+				var sort_rule = "Sort: ";
+				var sort_rule_chn = "排序列: ";
+				if (step.asc == true) {
+					sort_rule += "asc(" + step.source_column + ")";
+					sort_rule_chn += "升序(" + step.source_column + ")";
+				} else {
+					sort_rule += "desc(" + step.source_column + ")";
+					sort_rule_chn += "降序(" + step.source_column + ")";
+				}
+				var sort_dsl = {
+					type: "transform_tables_sort",
+					input_table_file: step.source_tables[0],
+					output_table_file: step.target_tables[0],
+					input_table_name: step.source_tables[0],
+					output_table_name: step.target_tables[0],
+					input_explicit_col: step.source_column,
+					operation_rule: sort_rule,
+					operation_rule_chn: sort_rule_chn
+				}
+				somnus_dsl.push(sort_dsl)
+				break;
+			default:
               console.log("Unknow transformation");
           }
 	console.log("Huawei")
