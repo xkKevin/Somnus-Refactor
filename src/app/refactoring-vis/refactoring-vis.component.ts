@@ -1,7 +1,8 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { gen_vis } from '@assets/refjs/gen_vis'
-import { gen_data } from "@assets/refjs/gen_data"
-import * as data from '@assets/data/sql_output.json'
+import { gen_vis } from '@assets/refjs/gen_vis';
+import { gen_data } from "@assets/refjs/gen_data";
+import { gen_provenance } from "@assets/refjs/gen_provenance";
+import * as data from '@assets/data/sql_output.json';
 
 @Component({
   selector: 'app-refactoring-vis',
@@ -12,6 +13,8 @@ export class RefactoringVisComponent implements AfterViewInit {
   ngAfterViewInit(): void {
 
     var somnusdata = gen_data(data)
+    var nodePos = gen_provenance(somnusdata.dsl, somnusdata.data_df)
+    // console.log(somnusdata)
 
     // gen_vis(data) {}
     // data.dsl
