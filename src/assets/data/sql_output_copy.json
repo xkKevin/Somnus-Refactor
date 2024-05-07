@@ -70,6 +70,20 @@
       ],
       "source_tables": ["subquery_filter_4_trim_5_round_6"],
       "target_tables": ["subquery_filter_4_trim_5_round_6_biz_rename_7"]
+    },
+    {
+      "function_id": "biz_rename",
+      "rename_type": "special_name",
+      "conditions": [
+        {
+          "source_column": "ROUND(total_amount, 1)",
+          "target_column": "total_amount"
+        }
+      ],
+      "source_tables": ["subquery_filter_4_trim_5_round_6_biz_rename_7"],
+      "target_tables": [
+        "subquery_filter_4_trim_5_round_6_biz_rename_7_biz_rename_8"
+      ]
     }
   ],
   "data_df": {
@@ -544,6 +558,19 @@
         "product": "iPhone",
         "ROUND(total_amount, 1)": 200.1
       }
+    ],
+    "subquery_filter_4_trim_5_round_6_biz_rename_7_biz_rename_8": [
+      {
+        "product_name": " MacBook",
+        "total_amount": 300.1,
+        "product": "MacBook"
+      },
+      {
+        "product_name": "AirPods",
+        "total_amount": 200.7,
+        "product": "AirPods"
+      },
+      { "product_name": " iPhone", "total_amount": 200.1, "product": "iPhone" }
     ]
   }
 }

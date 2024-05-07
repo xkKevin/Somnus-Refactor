@@ -173,7 +173,7 @@ function draw_text(g, text: string, maxLetter: number, fontSize: number, posi: R
     .attr('font-size', `${fontSize}px`)
 
   // 调整glyph内文本长度
-  maxLetter = maxLetter * 0.9
+  maxLetter = maxLetter * 0.8
   if (maxLetter >= text.length) {
     content_g.text(text)
   } else {
