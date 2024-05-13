@@ -28,7 +28,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
     let rule = { en: "", cn: "" }
     let in_tbls: any[], out_tbls: any[]
     let in_cols: GenTblCols[], out_cols: GenTblCols[]
-    let res
+    let res = null
     switch (step.function_id) {
       case "filter":
         if (step.keep == true) {
@@ -158,13 +158,11 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         extract_glyph_cols(in_cols, out_cols)
         // console.log(in_cols, out_cols);
 
-        res = gen_data(GenDataType.DeleteRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols })
-        visData.in = res.in
-        visData.out = res.out
         visData.type = TransformType.DeleteRows;
         visData.arrange = Arrange.Row;
-        visData.rule = rule[lang]
-        visArray.push(visData)
+
+        res = gen_data(GenDataType.DeleteRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols })
+
         break
 
       case "add":
@@ -188,17 +186,20 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         extract_glyph_cols(in_cols, out_cols)
         // console.log(in_cols, out_cols);
 
-        res = gen_data(GenDataType.FirstRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols })
-        console.log(res);
-        visData.in = res.in
-        visData.out = res.out
         visData.type = TransformType.CreateColumns;
         visData.arrange = Arrange.Col;
-        visData.rule = rule[lang]
-        visArray.push(visData)
+
+        res = gen_data(GenDataType.FirstRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols })
+
         break
     }
 
+    if (res) {
+      visData.in = res.in
+      visData.out = res.out
+      visData.rule = rule[lang]
+      visArray.push(visData)
+    }
   }
   return visArray
 }
