@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { TestComponent } from './test/test.component';
 import { GenerateVisComponent } from './generate-vis/generate-vis.component';
 import { RefactoringVisComponent } from './refactoring-vis/refactoring-vis.component';
+import { RefactoringPipelineComponent } from './refactoring-pipeline/refactoring-pipeline.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TestComponent,
     GenerateVisComponent,
-    RefactoringVisComponent
+    RefactoringVisComponent,
+    RefactoringPipelineComponent
   ],
   imports: [
     BrowserModule,

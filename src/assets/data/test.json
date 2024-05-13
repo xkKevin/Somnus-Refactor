@@ -1,0 +1,22 @@
+[
+  {
+    source_table: 1,
+    funciton_id:
+    target_table: 2
+  },
+  {
+    source_table: 2,
+    funciton_id:xxx
+    target_table: 3
+  },
+  {
+    source_table: 1,
+    funciton_id:xxx
+    target_table: 4
+  },
+  {
+    source_table: 3,4,
+    funciton_id:xxx
+    target_table: 5
+  }
+]
