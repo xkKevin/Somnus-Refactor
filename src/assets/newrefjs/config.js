@@ -1,3 +1,4 @@
+const svgName = "somnus_svg";
 const svgSize = {
   width: "200",
   height: "150",
@@ -43,6 +44,7 @@ const tableRender = {
 
 const showRule = true;
 export {
+  svgName,
   svgSize,
   fontSize,
   nodeSize,

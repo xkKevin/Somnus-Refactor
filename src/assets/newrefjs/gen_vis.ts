@@ -2,8 +2,10 @@
 
 import * as d3 from 'd3';
 import { draw_glyph } from '@assets/newrefjs/gen_glyph'
-import { VisData, TransformType, Arrange, SortType, GenDataType, GenTblCols } from '@assets/newrefjs/interface'
+import { VisData, TransformType, Arrange, GenDataType, GenTblCols, Rect, SortType } from '@assets/newrefjs/interface'
 import { gen_data, extract_glyph_cols } from "@assets/newrefjs/gen_data";
+import { draw_provenance } from '@assets/newrefjs/gen_provenance'
+import { svgName, svgSize, nodeSize } from '@assets/newrefjs/config'
 
 function convert2TableArray(tbl) {
   // 获取所有列名
@@ -28,7 +30,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
     let rule = { en: "", cn: "" }
     let in_tbls: any[], out_tbls: any[]
     let in_cols: GenTblCols[], out_cols: GenTblCols[]
-    let res
+    let res = null
     switch (step.function_id) {
       case "filter":
         if (step.keep == true) {
@@ -158,13 +160,11 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         extract_glyph_cols(in_cols, out_cols)
         // console.log(in_cols, out_cols);
 
-        res = gen_data(GenDataType.DeleteRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols })
-        visData.in = res.in
-        visData.out = res.out
         visData.type = TransformType.DeleteRows;
         visData.arrange = Arrange.Row;
-        visData.rule = rule[lang]
-        visArray.push(visData)
+
+        res = gen_data(GenDataType.DeleteRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols })
+
         break
 
       case "add":
@@ -188,28 +188,32 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         extract_glyph_cols(in_cols, out_cols)
         // console.log(in_cols, out_cols);
 
-        res = gen_data(GenDataType.FirstRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols })
-        console.log(res);
-        visData.in = res.in
-        visData.out = res.out
         visData.type = TransformType.CreateColumns;
         visData.arrange = Arrange.Col;
-        visData.rule = rule[lang]
-        visArray.push(visData)
+
+        res = gen_data(GenDataType.FirstRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols })
+
         break
     }
 
+    if (res) {
+      visData.in = res.in
+      visData.out = res.out
+      visData.rule = rule[lang]
+      visArray.push(visData)
+    }
   }
   return visArray
 }
 
 
-export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" | "cn" = "en") {
+export async function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" | "cn" = "en") {
   const width = window.innerWidth;
   const height = window.innerHeight - 100;
 
-  const somnus_svg = d3.select("body").append("svg")
-    .attr("id", "somnus_svg")
+  // const somnus_svg = d3.select("body").append("svg")
+  const somnus_svg = d3.select("svg")
+    .attr("id", svgName)
     .attr('width', width)
     .attr('height', height);
 
@@ -219,16 +223,17 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
   }
 
   let visArray = dsl_vis_adapter(data.dsl, data_df, lang)
-  visArray.forEach((vis, i) => {
-    draw_glyph(somnus_svg, i, { x: i * 260, y: 200 }, vis)
-  })
+  // console.log(visArray);
+  // visArray.forEach((vis, i) => {
+  //   draw_glyph(somnus_svg, i, { x: i * 260, y: 200 }, vis)
+  // })
 
-  /*
-  let visData2: VisData[] = [{
+  /*  可以打开以下注释，查看更加丰富的例子
+  let visArray2: VisData[] = [{
     in: [
       {
         data: [["amount1", "amount2"], ["100.2", "50.33"], ["75.12", "25"], ["200.1", "100"]],
-        name: "input1, input1,input12,23",
+        name: "tb1",
         color: [0, 1],
         scale: {
           x: 0.2,  // 展示出来的列数 / 原表的列数
@@ -239,7 +244,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     ],
     out: [{
       data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
-      name: "output2nput1, input1,input12,1234",
+      name: "tb2",
       color: [0, 2, 2],
       scale: {
         x: 0.2,
@@ -254,7 +259,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     in: [
       {
         data: [["amount1"], ["100.2"], ["75.12"], ["200.1"]],
-        name: "input1, input1,input12,23",
+        name: "tb2",
         color: [0],
         scale: {
           x: 0.2,
@@ -265,7 +270,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     ],
     out: [{
       data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
-      name: "output2nput1, input1,input12,1234",
+      name: "tb3",
       color: [0, 1, 2],
       scale: {
         x: 0.2,
@@ -280,7 +285,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     in: [
       {
         data: [["", "product_name", "total_amount"], ["", "", ""], ["", "", ""], ["", "", ""]],
-        name: "input1, input1,input12,23",
+        name: "tb1",
         color: [0, 1, 2],
         scale: {
           x: 0.2,
@@ -291,7 +296,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     ],
     out: [{
       data: [["product_name", "total_amount"], ["", ""], ["", ""], ["", ""]],
-      name: "output2nput1, input1,input12,1234",
+      name: "tb4",
       color: [1, 2],
       scale: {
         x: 0.2,
@@ -306,7 +311,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     in: [
       {
         data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""], ["", "2023-01-07", ""]],
-        name: "input1",
+        name: "tb4",
         color: [0, 1, 2],
         scale: {
           x: 0.2,
@@ -317,7 +322,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     ],
     out: [{
       data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""]],
-      name: "example_output",
+      name: "tb5",
       color: [2, 1, 0],
       scale: {
         x: 0.2,
@@ -332,7 +337,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     in: [
       {
         data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""], ["", "2023-01-07", ""]],
-        name: "input1, input1,input12,23",
+        name: "tb3",
         color: [0, 1, 2],
         scale: {
           x: 0.2,
@@ -341,7 +346,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
       },
       {
         data: [["", "order_date"], ["", "2024-01-02"]],
-        name: "output2nput1, input1,input12,1234",
+        name: "tb5",
         color: [1],
         scale: {
           x: 0.2,
@@ -351,7 +356,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     ],
     out: [{
       data: [["", "order_date", ""], ["", "2024-01-02", ""]],
-      name: "output2nput1, input1,input12,1234",
+      name: "tb6",
       color: [1],
       scale: {
         x: 0.2,
@@ -365,7 +370,7 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     in: [
       {
         data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"]],
-        name: "input1, input1,input12,23",
+        name: "tb6",
         color: [0, 1, 2],
         scale: {
           x: 0.2,
@@ -375,21 +380,80 @@ export function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" 
     ],
     out: [{
       data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
-      name: "output2nput1, input1,input12,1234",
+      name: "tb7_5678Y",
       color: [0, 1, 2],
       scale: {
         x: 0.2,
         y: 0.3
       }
+    },],
+    rule: 'create_columns_mutatecreate_columns_mutatecr',
+    type: TransformType.TransformTables,
+    arrange: Arrange.Row
+  }, {
+    in: [
+      {
+        data: [["", "n"], ["", "1"], ["", "2"]],
+        name: "input1, input1,input12,23",
+        color: [0, 1, 2],
+        scale: {
+          x: 0.2,
+          y: 0.5
+        }
+      }
+    ],
+    out: [{
+      data: [["12345678", "n"], ["", "6"], ["", "2"], ["", "1"]],
+      name: "output2nput1, input1,input12,1234",
+      color: [2, 1, 0],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      },
+      sortCol: [SortType.Desc, SortType.Asc]
     }],
     rule: 'create_columns_mutatecreate_columns_mutatecr',
     type: TransformType.TransformTables,
     arrange: Arrange.Row
   }]
-  visData2.forEach((vis, i) => {
-    draw_glyph(somnus_svg, i, { x: i * 260, y: 200 }, vis)
+  // try {
+  //   const nodePos = await draw_provenance(visData2);
+  //   console.log('Node positions:', nodePos);
+  //   // 在这里使用 nodePos 进行进一步操作
+  // } catch (error) {
+  //   console.error('Error drawing provenance:', error);
+  // }
+   visArray = visArray2
+  */
+
+  const nodePos = await draw_provenance(visArray);
+
+  visArray.forEach((vis, i) => {
+    let pos: Rect = { x: 0, y: 0 }
+    if (vis.in.length === 1 && vis.out.length === 1) {
+      let dy = Math.abs(nodePos[vis.in[0].name][1] - nodePos[vis.out[0].name][1])
+        > svgSize.height / 2 ? svgSize.height / 2 : 0;
+      pos.x = (nodePos[vis.in[0].name][0] + nodeSize.width + nodePos[vis.out[0].name][0]) /
+        2 - svgSize.width / 2;
+      pos.y = (nodePos[vis.in[0].name][1] + nodeSize.height + nodePos[vis.out[0].name][1]) /
+        2 - svgSize.height + dy - 10;
+    } else if (vis.in.length === 1) {
+      let meetingPosY = nodePos[vis.in[0].name][1] + nodeSize.height / 2;
+      let meetingPosX = nodePos[vis.in[0].name][0] + nodeSize.width + 0.8 * (Math.min(nodePos[vis.out[0].name][0], nodePos[vis.out[1].name][0]) - nodePos[vis.in[0].name][0] - nodeSize.width);
+      pos.x = (nodePos[vis.in[0].name][0] + nodeSize.width + meetingPosX) / 2 - svgSize.width / 2;
+      pos.y = (nodePos[vis.in[0].name][1] + nodeSize.height / 2 + meetingPosY) / 2 - svgSize.height - 10;
+    } else {
+      let meetingPosY = nodePos[vis.out[0].name][1] + nodeSize.height / 2;
+      let meetingPosX = Math.max(nodePos[vis.in[0].name][0], nodePos[vis.in[1].name][0]) +
+        nodeSize.width + 0.2 * (nodePos[vis.out[0].name][0] - nodeSize.width - Math.max(nodePos[vis.in[0].name][0], nodePos[vis.in[1].name][0]));
+      pos.x = (nodePos[vis.out[0].name][0] + meetingPosX) / 2 - svgSize.width / 2;
+      pos.y = (nodePos[vis.out[0].name][1] + nodeSize.height / 2 + meetingPosY) / 2 - svgSize.height - 10;
+    }
+    draw_glyph(somnus_svg, i, pos, vis)
   })
 
+
+  /*
   let visData3: VisData[] = [{
     in: [
       {
