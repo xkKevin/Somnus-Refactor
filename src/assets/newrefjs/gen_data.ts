@@ -300,7 +300,7 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
         name: tbl_names.out[0],
         color: out_index,
         scale: {
-          x: in_glyph_cols.length / tbls.out[0][0].length,
+          x: out_glyph_cols.length / tbls.out[0][0].length,
           y: (out_tbl.length - 1) / (tbls.out[0].length - 1),
         },
         linkCol: [...difference(new Set(out_ex_glyph_poi), new Set(in_ex_glyph_poi))]
