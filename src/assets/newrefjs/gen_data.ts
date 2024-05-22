@@ -1,5 +1,42 @@
 import { GenDataType, GenTblCols, Table } from '@assets/newrefjs/interface'
 
+function addElementToContext(cols: GenTblCols[]): void {
+  for (const col of cols) {
+    // 合并explicit，implicit，context中的所有元素到一个集合中，以便快速查找
+    const existingSet = new Set([...col.explicit, ...col.implicit, ...col.context]);
+
+    // 检查all数组的长度是否大于其他三个数组长度之和
+    if (col.all.length > col.explicit.length + col.implicit.length + col.context.length) {
+      // 寻找一个存在于all中但不在existingSet中的元素
+      const elementToAdd = col.all.find(element => !existingSet.has(element));
+
+      // 如果找到了这样的元素，则添加到context中
+      if (elementToAdd) {
+        col.context.push(elementToAdd);
+      }
+    }
+  }
+}
+
+function arraysStrictEqual(a: any[], b: any[]): boolean {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a.length !== b.length) return false;
+
+  return a.every((val, index) => val === b[index]);
+}
+
+function mergeAndRemoveDuplicates(arr1: any[], arr2: any[]): any[] {
+  // 合并两个数组
+  const mergedArray = [...arr1, ...arr2];
+
+  // 去除重复的元素
+  const uniqueArray = new Set(mergedArray);
+  const resultArray = Array.from(uniqueArray);
+
+  return resultArray;
+}
+
 function union<T>(...sets: Set<T>[]): Set<T> {
   const unionSet = new Set<T>();
   for (const set of sets) {
@@ -64,7 +101,7 @@ function extract_glyph_cols(in_cols: GenTblCols[], out_cols: GenTblCols[]) {
   let all_im_cols = new Set()
 
   let cols = [...in_cols, ...out_cols]
-
+  
   cols.forEach(c => {
     all_ex_cols = union(all_ex_cols, new Set(c.explicit))
     all_im_cols = union(all_im_cols, new Set(c.implicit))
@@ -176,7 +213,9 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
   const out_implicit_poi = findIndices(cols.out[0].all, cols.out[0].implicit)
   const out_im_glyph_poi = out_implicit_poi.map(ep => out_glyph_cols_poi.indexOf(ep))
 
-  const out_col_names = new Array(in_glyph_cols_poi.length).fill("")
+
+  const out_col_names = new Array(out_glyph_cols_poi.length).fill("")
+
   if (show_col_name) {
     out_explicit_poi.forEach((p, index) => {
       out_col_names[out_ex_glyph_poi[index]] = tbls.out[0][0][p]
@@ -274,6 +313,12 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
 
         row_i++
       }
+      let out_link = []
+      if (arraysStrictEqual(in_ex_glyph_poi,out_ex_glyph_poi)) {
+        out_link = out_ex_glyph_poi
+      } else {
+        out_link = [...difference(new Set(out_ex_glyph_poi), new Set(in_ex_glyph_poi))]
+      }
       inTable = {
         data: in_tbl,
         name: tbl_names.in[0],
@@ -303,7 +348,8 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
           x: out_glyph_cols.length / tbls.out[0][0].length,
           y: (out_tbl.length - 1) / (tbls.out[0].length - 1),
         },
-        linkCol: [...difference(new Set(out_ex_glyph_poi), new Set(in_ex_glyph_poi))]
+        // linkCol: [...difference(new Set(out_ex_glyph_poi), new Set(in_ex_glyph_poi))]
+        linkCol: out_link
       }
 
       return { in: [inTable], out: [outTable] }
@@ -315,4 +361,4 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
 }
 
 
-export { extract_glyph_cols, gen_data }
+export { extract_glyph_cols, gen_data, addElementToContext, mergeAndRemoveDuplicates }
