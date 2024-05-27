@@ -71,4 +71,4 @@ interface TblNum {
   out: number[]
 }
 
-export { VisData, TransformType, Arrange, Table, TblNum, Rect, SortType, GenDataType, GenTblCols }
+export { VisData, TransformType, Arrange, Table, TblNum, Rect, SortType, GenDataType, GenTblCols}

@@ -1,5 +1,53 @@
 import { GenDataType, GenTblCols, Table } from '@assets/newrefjs/interface'
 
+function sortBySpecifiedColumn(data: string[][], columnName: string, sortOrder: 'asc' | 'desc'): string[][] {
+  // 检查数据中是否包含列名
+  const headers: string[] = data[0];
+  const columnIndex: number = headers.indexOf(columnName);
+  if (columnIndex === -1) {
+    throw new Error(`Column "${columnName}" not found.`);
+  }
+
+  // 移除列名行，并复制剩余行以进行排序
+  const rows: string[][] = data.slice(1).map(row => [...row]);
+
+  // 定义一个辅助函数来获取排序值，根据数据类型进行处理
+  const getSortValue = (row: string[], index: number): string | number | Date => {
+    const value = row[index];
+    if (typeof value === 'string') {
+      // 如果是日期字符串，尝试转换为Date对象
+      if (!isNaN(Date.parse(value))) {
+        return new Date(value);
+      }
+      // 默认为字符串比较
+      return value;
+    } else if (typeof value === 'number') {
+      // 数值比较
+      return value;
+    } else {
+      // 其他类型，默认为字符串比较
+      return String(value);
+    }
+  };
+
+  // 执行排序
+  rows.sort((a, b) => {
+    const valueA = getSortValue(a, columnIndex);
+    const valueB = getSortValue(b, columnIndex);
+
+    if (valueA < valueB) {
+      return sortOrder === 'asc' ? -1 : 1;
+    } else if (valueA > valueB) {
+      return sortOrder === 'asc' ? 1 : -1;
+    } else {
+      return 0;
+    }
+  });
+
+  // 将排序后的行与列名行重新组合
+  return [headers, ...rows];
+}
+
 function addElementToContext(cols: GenTblCols[]): void {
   for (const col of cols) {
     // 合并explicit，implicit，context中的所有元素到一个集合中，以便快速查找
@@ -231,6 +279,8 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
   let in_index = [], out_index = []
 
   let inTable: Table, outTable: Table
+  let out_link = []
+  let index_tmp
 
 
   switch (gen_type) {
@@ -302,6 +352,7 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
           glyph_row[in_ex_glyph_poi[index]] = row[p]
         })
         in_tbl.push(glyph_row)
+        console.log(in_tbl);
 
         row = tbls.out[0][row_i]
         glyph_row = Array(out_glyph_cols_poi.length).fill("")
@@ -313,7 +364,7 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
 
         row_i++
       }
-      let out_link = []
+      out_link = []
       if (arraysStrictEqual(in_ex_glyph_poi,out_ex_glyph_poi)) {
         out_link = out_ex_glyph_poi
       } else {
@@ -334,7 +385,66 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
       in_glyph_cols.forEach((gc, index) => {
         out_index[out_glyph_cols.indexOf(gc)] = index
       })
-      let index_tmp = in_glyph_cols.length
+      index_tmp = in_glyph_cols.length
+      out_index.forEach((oi, index) => {
+        if (oi == null) {
+          out_index[index] = index_tmp++
+        }
+      })
+      outTable = {
+        data: out_tbl,
+        name: tbl_names.out[0],
+        color: out_index,
+        scale: {
+          x: out_glyph_cols.length / tbls.out[0][0].length,
+          y: (out_tbl.length - 1) / (tbls.out[0].length - 1),
+        },
+        // linkCol: [...difference(new Set(out_ex_glyph_poi), new Set(in_ex_glyph_poi))]
+        linkCol: out_link
+      }
+
+      return { in: [inTable], out: [outTable] }
+
+    case GenDataType.Sort:
+      while (in_tbl.length < 4 && in_tbl.length < tbls.in[0].length) {
+        let row = tbls.in[0][row_i]
+        let glyph_row = Array(in_glyph_cols_poi.length).fill("")
+        in_explicit_poi.forEach((p, index) => {
+          glyph_row[in_ex_glyph_poi[index]] = row[p]
+        })
+        in_tbl.push(glyph_row)
+
+        row = tbls.out[0][row_i]
+        glyph_row = Array(out_glyph_cols_poi.length).fill("")
+        out_explicit_poi.forEach((p, index) => {
+          glyph_row[out_ex_glyph_poi[index]] = row[p]
+        })
+
+        out_tbl.push(glyph_row)
+
+        row_i++
+      }
+      if (arraysStrictEqual(in_ex_glyph_poi,out_ex_glyph_poi)) {
+        out_link = out_ex_glyph_poi
+      } else {
+        out_link = [...difference(new Set(out_ex_glyph_poi), new Set(in_ex_glyph_poi))]
+      }
+      inTable = {
+        data: in_tbl,
+        name: tbl_names.in[0],
+        color: range(0, in_glyph_cols_poi.length),
+        scale: {
+          x: in_glyph_cols.length / tbls.in[0][0].length,
+          y: (in_tbl.length - 1) / (tbls.in[0].length - 1),
+        },
+        linkCol: in_ex_glyph_poi
+      }
+
+      out_index = Array(out_glyph_cols_poi.length).fill(null)
+      in_glyph_cols.forEach((gc, index) => {
+        out_index[out_glyph_cols.indexOf(gc)] = index
+      })
+      index_tmp = in_glyph_cols.length
       out_index.forEach((oi, index) => {
         if (oi == null) {
           out_index[index] = index_tmp++

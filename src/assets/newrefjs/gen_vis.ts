@@ -56,6 +56,11 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
     let target_column_list = []
     let temp_target_name = ""
     let concat_char = ""
+    let join_table_name = ""
+    let join_source_tables
+    let join_info
+    let join_columns = []
+    console.log(step.function_id);
 
     // 根据操作类型生成rules并筛选data
     switch (step.function_id) {
@@ -217,9 +222,9 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
           in_cols[0].implicit = in_cols[0].implicit.filter(item => !out_cols[0].implicit.includes(item));
         }
 
-        if (in_cols[0].all.length > out_cols[0].all.length) {
-          addElementToContext(in_cols)
-        }
+        // if (in_cols[0].all.length > out_cols[0].all.length) {
+        //   addElementToContext(in_cols)
+        // }
 
         visData.type = TransformType.DeleteColumns;
         visData.arrange = Arrange.Col;
@@ -1472,6 +1477,72 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         res = gen_data(GenDataType.FirstRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols });
 
         break;
+      // 多表Join
+      case "join":
+        console.log("join");
+        rule.en = "Join: " + step.source_tables[0];
+        rule.cn = "多表Join：" + step.source_tables[0];
+
+        join_source_tables = step.source_tables
+
+        step.join_parameters.forEach((parameter: any) => {
+          if (parameter.alias == null) {
+            join_table_name = parameter.table_name;
+          } else {
+            join_table_name = parameter.alias;
+          }
+          join_source_tables.push(join_table_name);
+          join_info = parameter.join_keys[0];
+          join_columns.push(join_info.left_col);
+          join_columns.push(join_info.right_col);
+          switch (parameter.join_type) {
+            case "LEFT_JOIN":
+            case "LOOK_UP":
+              rule.en += " LEFT JOIN: ";
+              rule.cn += "左联：";
+              break;
+            case "RIGHT_JOIN":
+              rule.en += " RIGHT JOIN: ";
+              rule.cn += "右联：";
+              break;
+            case "INNER_JOIN":
+              rule.en += " INNER JOIN: ";
+              rule.cn += "内联：";
+              break;
+            case "FULL_OUTER_JOIN":
+              rule.en += " FULL OUTER JOIN: ";
+              rule.cn += "全外连接：";
+              break;
+          }
+          rule.en += join_table_name + " " + join_info.left_col + " " + join_info.condition + " " + join_info.right_col + ";";
+          rule.cn += join_table_name + " " + join_info.left_col + " " + join_info.condition + " " + join_info.right_col + "；";
+        })
+
+        in_tbls = join_source_tables.map(tbl => data_df[tbl])
+        out_tbls = step.target_tables.map(tbl => data_df[tbl])
+
+        join_columns = Array.from(new Set(join_columns));       
+        in_cols = [{
+          all: Array.from(in_tbls[0][0]),
+          explicit: join_columns,
+          implicit: [],
+          context: []
+        }]
+        out_cols = [{
+          all: Array.from(out_tbls[0][0]),
+          explicit: [],
+          implicit: [],
+          context: []
+        }]
+
+        extract_glyph_cols(in_cols, out_cols);        
+
+        visData.type = TransformType.CombineTables;
+        visData.arrange = Arrange.Col;
+
+        res = gen_data(GenDataType.FirstRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols });
+
+        break;
     }
 
     if (res) {
@@ -1729,7 +1800,6 @@ export async function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang:
     }
     draw_glyph(somnus_svg, i, pos, vis)
   })
-
 
   /*
   let visData3: VisData[] = [{
