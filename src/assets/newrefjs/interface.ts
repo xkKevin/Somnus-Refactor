@@ -40,6 +40,7 @@ enum TransformType {
   TransformTables,
   SeparateTables,
   CombineTables,
+  Others
 
   // 以下弃用
   // TransformColumns,

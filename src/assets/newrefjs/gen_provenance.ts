@@ -218,7 +218,7 @@ function draw_edge(g, specs: VisData[], nodePos: { [key: string]: [number, numbe
 
 function draw_node(g, specs: VisData[], nodePos: { [key: string]: [number, number] }) {
   let nodeName: Set<string> = new Set()
-  let tableInfo: { [key: string]: [number, number, number] } = {}
+  let tableInfo: { [key: string]: [number, number, number] } = {}  // [step_id, row_num, col_num]
   specs.forEach((spi, idx) => {
     spi.in.forEach(tbl => {
       if (!nodeName.has(tbl.name)) {
@@ -236,7 +236,7 @@ function draw_node(g, specs: VisData[], nodePos: { [key: string]: [number, numbe
     })
   })
 
-  console.log(tableInfo);
+  // console.log(tableInfo);
 
   for (let node_i of nodeName) {
 
@@ -395,7 +395,7 @@ export function draw_provenance(visArray: VisData[]): Promise<{ [key: string]: [
   return new Promise((resolve, reject) => {
     let { groups, edges } = get_components(visArray);
     let graphs = get_graphs(groups, edges);
-    console.log(graphs);
+    // console.log(graphs);
 
     let svgWidth = 0, svgHeight = 0;
     let nodePos: { [key: string]: [number, number] } = {};

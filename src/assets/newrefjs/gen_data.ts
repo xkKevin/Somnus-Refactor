@@ -101,7 +101,7 @@ function extract_glyph_cols(in_cols: GenTblCols[], out_cols: GenTblCols[]) {
   let all_im_cols = new Set()
 
   let cols = [...in_cols, ...out_cols]
-  
+
   cols.forEach(c => {
     all_ex_cols = union(all_ex_cols, new Set(c.explicit))
     all_im_cols = union(all_im_cols, new Set(c.implicit))
@@ -314,7 +314,7 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
         row_i++
       }
       let out_link = []
-      if (arraysStrictEqual(in_ex_glyph_poi,out_ex_glyph_poi)) {
+      if (arraysStrictEqual(in_ex_glyph_poi, out_ex_glyph_poi)) {
         out_link = out_ex_glyph_poi
       } else {
         out_link = [...difference(new Set(out_ex_glyph_poi), new Set(in_ex_glyph_poi))]
