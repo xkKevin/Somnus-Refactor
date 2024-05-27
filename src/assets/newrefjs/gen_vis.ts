@@ -1,11 +1,12 @@
 // glyph设计：https://shimo.im/docs/ppGhvvjdtwDprg8K
 
 import * as d3 from 'd3';
-import { draw_glyph } from '@assets/newrefjs/gen_glyph'
+import { draw_glyph, draw_text } from '@assets/newrefjs/gen_glyph'
 import { VisData, TransformType, Arrange, GenDataType, GenTblCols, Rect, SortType } from '@assets/newrefjs/interface'
 import { gen_data, extract_glyph_cols, addElementToContext, mergeAndRemoveDuplicates } from "@assets/newrefjs/gen_data";
 import { draw_provenance } from '@assets/newrefjs/gen_provenance'
 import { svgName, svgSize, nodeSize } from '@assets/newrefjs/config'
+import { Table } from '@assets/refjs/interface';
 
 function sliceColArray<T>(colArray: T[], startElement: T, endElement: T): T[] {
   let startIndex: number;
@@ -217,7 +218,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
 
         extract_glyph_cols(in_cols, out_cols)
         // out_cols[0].context =[]
-        
+
         if (in_cols[0].implicit.length > 1) {
           in_cols[0].implicit = in_cols[0].implicit.filter(item => !out_cols[0].implicit.includes(item));
         }
@@ -241,7 +242,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
           rule.en = "Sort " + step.source_column + " by desc";
           rule.cn = "对" + step.source_column + "进行降序排序";
         }
-        
+
         in_tbls = step.source_tables.map(tbl => data_df[tbl])
         out_tbls = step.target_tables.map(tbl => data_df[tbl])
         in_cols = [{
@@ -496,7 +497,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         }]
 
         extract_glyph_cols(in_cols, out_cols);
-        
+
 
         visData.type = TransformType.CreateColumns;
         visData.arrange = Arrange.Col;
@@ -511,22 +512,22 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
       case "division":
         rule.en = "Mutate: " + step.target_column + " = " + step.source_column;
         rule.cn = "计算: " + step.target_column + " = " + step.source_column;
-        switch(step.function_id){
+        switch (step.function_id) {
           case "add":
-            rule.en += " + " +  step.arguments;
-            rule.cn += " + " +  step.arguments;
+            rule.en += " + " + step.arguments;
+            rule.cn += " + " + step.arguments;
             break;
           case "substract":
-            rule.en += " - " +  step.arguments;
-            rule.cn += " - " +  step.arguments;
+            rule.en += " - " + step.arguments;
+            rule.cn += " - " + step.arguments;
             break;
           case "multiply":
-            rule.en += " * " +  step.arguments;
-            rule.cn += " * " +  step.arguments;
+            rule.en += " * " + step.arguments;
+            rule.cn += " * " + step.arguments;
             break;
           case "division":
-            rule.en += " / " +  step.arguments;
-            rule.cn += " / " +  step.arguments;
+            rule.en += " / " + step.arguments;
+            rule.cn += " / " + step.arguments;
             break;
         }
 
@@ -541,7 +542,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         if (Array.from(in_tbls[0][0]).includes(step.arguments)) {
           in_cols[0].explicit.push(step.arguments)
         }
-        
+
         out_cols = [{
           all: Array.from(out_tbls[0][0]),
           explicit: [step.target_column],
@@ -721,7 +722,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
       case "current_timestamp":
         rule_column_list = step.target_columns.join(", ")
         rule.en = "Mutate: " + "add column" + rule_column_list + " by ";
-        rule.cn = "计算："+ "派生列" + rule_column_list;
+        rule.cn = "计算：" + "派生列" + rule_column_list;
         switch (step.function_id) {
           case "space":
             rule.en += step.arguments + "space";
@@ -1015,7 +1016,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
       // 空值填充
       case "if_null":
         rule_column_list = step.source_columns.join(", ");
-        switch(step.replacement_type) {
+        switch (step.replacement_type) {
           case "sum":
             rule.en = "Null fill: " + rule_column_list + " by sum";
             rule.cn = "通过求和填充空值：" + rule_column_list;
@@ -1025,7 +1026,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
             rule.cn = "通过滚动求和填充空值：" + rule_column_list;
             if (step.order_by_type == "custom") {
               step.orders.forEach((order: any) => {
-                if (order.asc){
+                if (order.asc) {
                   rule.en += "; sort " + order.source_column + " by asc";
                   rule.cn += "； 对" + order.source_column + "进行升序排序";
                 } else {
@@ -1081,7 +1082,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
           context: []
         }]
         rule_column_list = step.source_columns.join(", ");
-        switch(step.replace_type) {
+        switch (step.replace_type) {
           case "pattern":
             rule.en = "Replace: " + rule_column_list + "\'s " + step.pattern + " to " + step.value;
             rule.cn = "数值替换：" + rule_column_list + "中的" + step.pattern + " 为 " + step.value;
@@ -1105,7 +1106,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
       case "extract":
         rule.en = "Extract: " + step.source_column + " by ";
         rule.cn = "数据提取：" + step.source_column + "通过";
-        switch(step.match_type) {
+        switch (step.match_type) {
           case "pattern":
             rule.en += "pattern " + step.pattern + " extract " + step.number + " rows";
             rule.cn += "正则表达式" + step.pattern + "提取" + step.number + "个数据";
@@ -1168,7 +1169,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         rule.en = "Split: " + step.source_column + " by ";
         rule.cn = "拆分列：" + step.source_column + "通过";
         rule_column_list = step.target_columns.join(", ");
-        switch(step.split_type) {
+        switch (step.split_type) {
           case "delimiter":
             rule.en += "delimiter " + step.delimiter + " to " + rule_column_list;
             rule.cn += "分隔符" + step.delimiter + "拆分为" + rule_column_list;
@@ -1216,7 +1217,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         step.values.forEach((value: any) => {
           target_columns = mergeAndRemoveDuplicates(target_columns, value.expressions)
           let expression_rule = value.expressions.join(", ");
-          switch(value.function_id) {
+          switch (value.function_id) {
             case "sum":
               rule.en += "sum(" + expression_rule + "); ";
               rule.cn += "求合（" + expression_rule + "）；";
@@ -1362,7 +1363,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         }]
 
         extract_glyph_cols(in_cols, out_cols);
-        
+
 
         visData.type = TransformType.CreateColumns;
         visData.arrange = Arrange.Col;
@@ -1408,7 +1409,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         }]
 
         extract_glyph_cols(in_cols, out_cols);
-        
+
 
         visData.type = TransformType.CreateColumns;
         visData.arrange = Arrange.Col;
@@ -1437,7 +1438,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         }]
 
         extract_glyph_cols(in_cols, out_cols);
-        
+
 
         visData.type = TransformType.CreateColumns;
         visData.arrange = Arrange.Col;
@@ -1469,7 +1470,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         }]
 
         extract_glyph_cols(in_cols, out_cols);
-        
+
 
         visData.type = TransformType.CreateColumns;
         visData.arrange = Arrange.Col;
@@ -1548,13 +1549,57 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
     if (res) {
       visData.in = res.in
       visData.out = res.out
-      visData.rule = rule[lang]
-      visArray.push(visData)
+    } else {
+      // res为null，不生成glyph
+      visData.in = step.source_tables.map(tbl => {
+        return {
+          data: data_df[tbl],
+          name: tbl,
+          color: [],
+          scale: { x: 1, y: 1 }
+        } as Table
+      })
+      visData.out = step.target_tables.map(tbl => {
+        return {
+          data: data_df[tbl],
+          name: tbl,
+          color: [],
+          scale: { x: 1, y: 1 }
+        } as Table
+      })
+      visData.type = TransformType.Others
+      visData.arrange = Arrange.Row
     }
+    visData.rule = rule[lang]
+    visArray.push(visData)
   }
   return visArray
 }
 
+function get_glyph_posi(vis: VisData, nodePos): Rect {
+  // 下面是在计算 glpyh 的坐标位置
+  let pos: Rect = { x: 0, y: 0 }
+  if (vis.in.length === 1 && vis.out.length === 1) {
+    let dy = Math.abs(nodePos[vis.in[0].name][1] - nodePos[vis.out[0].name][1])
+      > svgSize.height / 2 ? svgSize.height / 2 : 0;
+    pos.x = (nodePos[vis.in[0].name][0] + nodeSize.width + nodePos[vis.out[0].name][0]) /
+      2 - svgSize.width / 2;
+    pos.y = (nodePos[vis.in[0].name][1] + nodeSize.height + nodePos[vis.out[0].name][1]) /
+      2 - svgSize.height + dy - 10;
+  } else if (vis.in.length === 1) {
+    let meetingPosY = nodePos[vis.in[0].name][1] + nodeSize.height / 2;
+    let meetingPosX = nodePos[vis.in[0].name][0] + nodeSize.width + 0.8 * (Math.min(nodePos[vis.out[0].name][0], nodePos[vis.out[1].name][0]) - nodePos[vis.in[0].name][0] - nodeSize.width);
+    pos.x = (nodePos[vis.in[0].name][0] + nodeSize.width + meetingPosX) / 2 - svgSize.width / 2;
+    pos.y = (nodePos[vis.in[0].name][1] + nodeSize.height / 2 + meetingPosY) / 2 - svgSize.height - 10;
+  } else {
+    let meetingPosY = nodePos[vis.out[0].name][1] + nodeSize.height / 2;
+    let meetingPosX = Math.max(nodePos[vis.in[0].name][0], nodePos[vis.in[1].name][0]) +
+      nodeSize.width + 0.2 * (nodePos[vis.out[0].name][0] - nodeSize.width - Math.max(nodePos[vis.in[0].name][0], nodePos[vis.in[1].name][0]));
+    pos.x = (nodePos[vis.out[0].name][0] + meetingPosX) / 2 - svgSize.width / 2;
+    pos.y = (nodePos[vis.out[0].name][1] + nodeSize.height / 2 + meetingPosY) / 2 - svgSize.height - 10;
+  }
+  return pos
+}
 
 export async function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang: "en" | "cn" = "en") {
   const width = window.innerWidth;
@@ -1577,228 +1622,238 @@ export async function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang:
   //   draw_glyph(somnus_svg, i, { x: i * 260, y: 200 }, vis)
   // })
 
-  /*  可以打开以下注释，查看更加丰富的例子
-  let visArray2: VisData[] = [{
-    in: [
-      {
-        data: [["amount1", "amount2"], ["100.2", "50.33"], ["75.12", "25"], ["200.1", "100"]],
-        name: "tb1",
-        color: [0, 1],
-        scale: {
-          x: 0.2,  // 展示出来的列数 / 原表的列数
-          y: 0.5
-        },
-        linkCol: [0, 1]
-      }
-    ],
-    out: [{
-      data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
-      name: "tb2",
-      color: [0, 2, 2],
-      scale: {
-        x: 0.2,
-        y: 0.3
-      },
-      linkCol: [1]
-    }],
-    rule: 'create_columns_mutatecreate_columns_mutatecr',
-    type: TransformType.CreateColumns,
-    arrange: Arrange.Col
-  }, {
-    in: [
-      {
-        data: [["amount1"], ["100.2"], ["75.12"], ["200.1"]],
-        name: "tb2",
-        color: [0],
-        scale: {
-          x: 0.2,
-          y: 0.5
-        },
-        linkCol: [0]
-      }
-    ],
-    out: [{
-      data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
-      name: "tb3",
-      color: [0, 1, 2],
-      scale: {
-        x: 0.2,
-        y: 0.3
-      },
-      linkCol: [1, 2]
-    }],
-    rule: 'create_columns_mutatecreate_columns_mutatecr',
-    type: TransformType.CreateColumns,
-    arrange: Arrange.Col
-  }, {
-    in: [
-      {
-        data: [["", "product_name", "total_amount"], ["", "", ""], ["", "", ""], ["", "", ""]],
-        name: "tb1",
-        color: [0, 1, 2],
-        scale: {
-          x: 0.2,
-          y: 0.5
-        },
-        // linkCol: [0]
-      }
-    ],
-    out: [{
-      data: [["product_name", "total_amount"], ["", ""], ["", ""], ["", ""]],
-      name: "tb4",
-      color: [1, 2],
-      scale: {
-        x: 0.2,
-        y: 0.3
-      },
-      // linkCol: [0, 2]
-    }],
-    rule: 'create_columns_mutatecreate_columns_mutatecr',
-    type: TransformType.DeleteColumns,
-    arrange: Arrange.Col
-  }, {
-    in: [
-      {
-        data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""], ["", "2023-01-07", ""]],
-        name: "tb4",
-        color: [0, 1, 2],
-        scale: {
-          x: 0.2,
-          y: 0.5
-        },
-        // linkCol: [0, 2]
-      }
-    ],
-    out: [{
-      data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""]],
-      name: "tb5",
-      color: [2, 1, 0],
-      scale: {
-        x: 0.2,
-        y: 0.3
-      },
-      // linkCol: [0]
-    }],
-    rule: 'Example Explanation',
-    type: TransformType.DeleteRows,
-    arrange: Arrange.Col
-  }, {
-    in: [
-      {
-        data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""], ["", "2023-01-07", ""]],
-        name: "tb3",
-        color: [0, 1, 2],
-        scale: {
-          x: 0.2,
-          y: 0.5
-        }
-      },
-      {
-        data: [["", "order_date"], ["", "2024-01-02"]],
-        name: "tb5",
-        color: [1],
-        scale: {
-          x: 0.2,
-          y: 0.3
-        }
-      }
-    ],
-    out: [{
-      data: [["", "order_date", ""], ["", "2024-01-02", ""]],
-      name: "tb6",
-      color: [1],
-      scale: {
-        x: 0.2,
-        y: 0.3
-      }
-    }],
-    rule: 'create_columns_mutatecreate_columns_mutatecr',
-    type: TransformType.CombineTables,
-    arrange: Arrange.Row
-  }, {
-    in: [
-      {
-        data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"]],
-        name: "tb6",
-        color: [0, 1, 2],
-        scale: {
-          x: 0.2,
-          y: 0.5
-        }
-      }
-    ],
-    out: [{
-      data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
-      name: "tb7_5678Y",
-      color: [0, 1, 2],
-      scale: {
-        x: 0.2,
-        y: 0.3
-      }
-    },],
-    rule: 'create_columns_mutatecreate_columns_mutatecr',
-    type: TransformType.TransformTables,
-    arrange: Arrange.Row
-  }, {
-    in: [
-      {
-        data: [["", "n"], ["", "1"], ["", "2"]],
-        name: "input1, input1,input12,23",
-        color: [0, 1, 2],
-        scale: {
-          x: 0.2,
-          y: 0.5
-        }
-      }
-    ],
-    out: [{
-      data: [["12345678", "n"], ["", "6"], ["", "2"], ["", "1"]],
-      name: "output2nput1, input1,input12,1234",
-      color: [2, 1, 0],
-      scale: {
-        x: 0.2,
-        y: 0.3
-      },
-      sortCol: [SortType.Desc, SortType.Asc]
-    }],
-    rule: 'create_columns_mutatecreate_columns_mutatecr',
-    type: TransformType.TransformTables,
-    arrange: Arrange.Row
-  }]
-  // try {
-  //   const nodePos = await draw_provenance(visData2);
-  //   console.log('Node positions:', nodePos);
-  //   // 在这里使用 nodePos 进行进一步操作
-  // } catch (error) {
-  //   console.error('Error drawing provenance:', error);
-  // }
+  /* // 可以打开以下注释，查看更加丰富的例子
+   let visArray2: VisData[] = [{
+     in: [
+       {
+         data: [["amount1", "amount2"], ["100.2", "50.33"], ["75.12", "25"], ["200.1", "100"]],
+         name: "tb1",
+         color: [0, 1],
+         scale: {
+           x: 0.2,  // 展示出来的列数 / 原表的列数
+           y: 0.5
+         },
+         linkCol: [0, 1]
+       }
+     ],
+     out: [{
+       data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
+       name: "tb2",
+       color: [0, 2, 2],
+       scale: {
+         x: 0.2,
+         y: 0.3
+       },
+       linkCol: [1]
+     }],
+     rule: 'create_columns_mutatecreate_columns_mutatecr',
+     type: TransformType.CreateColumns,
+     arrange: Arrange.Col
+   }, {
+     in: [
+       {
+         data: [["amount1"], ["100.2"], ["75.12"], ["200.1"]],
+         name: "tb2",
+         color: [0],
+         scale: {
+           x: 0.2,
+           y: 0.5
+         },
+         linkCol: [0]
+       }
+     ],
+     out: [{
+       data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
+       name: "tb3",
+       color: [0, 1, 2],
+       scale: {
+         x: 0.2,
+         y: 0.3
+       },
+       linkCol: [1, 2]
+     }],
+     rule: 'create_columns_mutatecreate_columns_mutatecr',
+     type: TransformType.CreateColumns,
+     arrange: Arrange.Col
+   }, {
+     in: [
+       {
+         data: [["", "product_name", "total_amount"], ["", "", ""], ["", "", ""], ["", "", ""]],
+         name: "tb1",
+         color: [0, 1, 2],
+         scale: {
+           x: 0.2,
+           y: 0.5
+         },
+         // linkCol: [0]
+       }
+     ],
+     out: [{
+       data: [["product_name", "total_amount"], ["", ""], ["", ""], ["", ""]],
+       name: "tb4",
+       color: [1, 2],
+       scale: {
+         x: 0.2,
+         y: 0.3
+       },
+       // linkCol: [0, 2]
+     }],
+     rule: 'create_columns_mutatecreate_columns_mutatecr',
+     type: TransformType.DeleteColumns,
+     arrange: Arrange.Col
+   }, {
+     in: [
+       {
+         data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""], ["", "2023-01-07", ""]],
+         name: "tb4",
+         color: [0, 1, 2],
+         scale: {
+           x: 0.2,
+           y: 0.5
+         },
+         // linkCol: [0, 2]
+       }
+     ],
+     out: [{
+       data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""]],
+       name: "tb5",
+       color: [2, 1, 0],
+       scale: {
+         x: 0.2,
+         y: 0.3
+       },
+       // linkCol: [0]
+     }],
+     rule: 'Example Explanation',
+     type: TransformType.DeleteRows,
+     arrange: Arrange.Col
+   }, {
+     in: [
+       {
+         data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""], ["", "2023-01-07", ""]],
+         name: "tb3",
+         color: [0, 1, 2],
+         scale: {
+           x: 0.2,
+           y: 0.5
+         }
+       },
+       {
+         data: [["", "order_date"], ["", "2024-01-02"]],
+         name: "tb5",
+         color: [1],
+         scale: {
+           x: 0.2,
+           y: 0.3
+         }
+       }
+     ],
+     out: [{
+       data: [["", "order_date", ""], ["", "2024-01-02", ""]],
+       name: "tb6",
+       color: [1],
+       scale: {
+         x: 0.2,
+         y: 0.3
+       }
+     }],
+     rule: 'create_columns_mutatecreate_columns_mutatecr',
+     type: TransformType.CombineTables,
+     arrange: Arrange.Row
+   }, {
+     in: [
+       {
+         data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"]],
+         name: "tb6",
+         color: [0, 1, 2],
+         scale: {
+           x: 0.2,
+           y: 0.5
+         }
+       }
+     ],
+     out: [{
+       data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
+       name: "tb7_5678Y",
+       color: [0, 1, 2],
+       scale: {
+         x: 0.2,
+         y: 0.3
+       }
+     },],
+     rule: 'create_columns_mutatecreate_columns_mutatecr',
+     type: TransformType.TransformTables,
+     arrange: Arrange.Row
+   }, {
+     in: [
+       {
+         data: [["", "n"], ["", "1"], ["", "2"]],
+         name: "input1, input1,input12,23",
+         color: [0, 1, 2],
+         scale: {
+           x: 0.2,
+           y: 0.5
+         }
+       }
+     ],
+     out: [{
+       data: [["12345678", "n"], ["", "6"], ["", "2"], ["", "1"]],
+       name: "output2nput1, input1,input12,1234",
+       color: [2, 1, 0],
+       scale: {
+         x: 0.2,
+         y: 0.3
+       },
+       sortCol: [SortType.Desc, SortType.Asc]
+     }],
+     rule: 'create_columns_mutatecreate_columns_mutatecr',
+     type: TransformType.TransformTables,
+     arrange: Arrange.Row
+   }, {
+     in: [
+       {
+         data: [["", "n"], ["", "1"], ["", "2"]],
+         name: "output2nput1, input1,input12,1234",
+         color: [0, 1, 2],
+         scale: {
+           x: 0.2,
+           y: 0.5
+         }
+       }
+     ],
+     out: [{
+       data: [["12345678", "n"], ["", "6"], ["", "2"], ["", "1"]],
+       name: "output2n",
+       color: [2, 1, 0],
+       scale: {
+         x: 0.2,
+         y: 0.3
+       },
+       sortCol: [SortType.Desc, SortType.Asc]
+     }],
+     rule: 'create_columns_mutatecreate_columns_mutatecr',
+     type: TransformType.Others,
+     arrange: Arrange.Row
+   }]
+   // try {
+   //   const nodePos = await draw_provenance(visData2);
+   //   console.log('Node positions:', nodePos);
+   //   // 在这里使用 nodePos 进行进一步操作
+   // } catch (error) {
+   //   console.error('Error drawing provenance:', error);
+   // }
    visArray = visArray2
-  */
+   */
 
   const nodePos = await draw_provenance(visArray);
 
   visArray.forEach((vis, i) => {
-    let pos: Rect = { x: 0, y: 0 }
-    if (vis.in.length === 1 && vis.out.length === 1) {
-      let dy = Math.abs(nodePos[vis.in[0].name][1] - nodePos[vis.out[0].name][1])
-        > svgSize.height / 2 ? svgSize.height / 2 : 0;
-      pos.x = (nodePos[vis.in[0].name][0] + nodeSize.width + nodePos[vis.out[0].name][0]) /
-        2 - svgSize.width / 2;
-      pos.y = (nodePos[vis.in[0].name][1] + nodeSize.height + nodePos[vis.out[0].name][1]) /
-        2 - svgSize.height + dy - 10;
-    } else if (vis.in.length === 1) {
-      let meetingPosY = nodePos[vis.in[0].name][1] + nodeSize.height / 2;
-      let meetingPosX = nodePos[vis.in[0].name][0] + nodeSize.width + 0.8 * (Math.min(nodePos[vis.out[0].name][0], nodePos[vis.out[1].name][0]) - nodePos[vis.in[0].name][0] - nodeSize.width);
-      pos.x = (nodePos[vis.in[0].name][0] + nodeSize.width + meetingPosX) / 2 - svgSize.width / 2;
-      pos.y = (nodePos[vis.in[0].name][1] + nodeSize.height / 2 + meetingPosY) / 2 - svgSize.height - 10;
+    let pos = get_glyph_posi(vis, nodePos)
+    if (vis.type === TransformType.Others) {
+      draw_text(somnus_svg, vis.rule, 38, 15, pos, { x: svgSize.width, y: svgSize.height * 1.8 }, 'middle', 'black')
     } else {
-      let meetingPosY = nodePos[vis.out[0].name][1] + nodeSize.height / 2;
-      let meetingPosX = Math.max(nodePos[vis.in[0].name][0], nodePos[vis.in[1].name][0]) +
-        nodeSize.width + 0.2 * (nodePos[vis.out[0].name][0] - nodeSize.width - Math.max(nodePos[vis.in[0].name][0], nodePos[vis.in[1].name][0]));
-      pos.x = (nodePos[vis.out[0].name][0] + meetingPosX) / 2 - svgSize.width / 2;
-      pos.y = (nodePos[vis.out[0].name][1] + nodeSize.height / 2 + meetingPosY) / 2 - svgSize.height - 10;
+      draw_glyph(somnus_svg, i, pos, vis)
     }
-    draw_glyph(somnus_svg, i, pos, vis)
   })
 
   /*

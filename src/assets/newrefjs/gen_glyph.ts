@@ -270,7 +270,7 @@ function compute_tbl_posi(colNum: TblNum, rowNum: TblNum, cellWidth: number, cel
 
 
 
-export function draw_glyph(svg, step: number, posi: Rect, vis: VisData) {
+function draw_glyph(svg, step: number, posi: Rect, vis: VisData) {
 
   let width = svgSize.width
   let height = svgSize.height
@@ -426,3 +426,5 @@ export function draw_glyph(svg, step: number, posi: Rect, vis: VisData) {
   }
 
 }
+
+export { draw_text, draw_glyph }
