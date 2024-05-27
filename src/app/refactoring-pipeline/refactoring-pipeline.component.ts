@@ -1,6 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { gen_vis } from '@assets/newrefjs/gen_vis';
-import * as data from '@assets/data/sql_output_copy.json';
+import * as data from '@assets/data/DScase3.json';
 
 @Component({
   selector: 'app-refactoring-pipeline',

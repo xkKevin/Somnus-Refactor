@@ -12,6 +12,16 @@ interface Table {
   sortCol?: SortType[]  // 有没有排序的列
 }
 
+interface SelectDataInputTable {
+  in_glyph_cols: string[],
+  in_glyph_cols_poi: number[],
+  in_explicit_poi: number[],
+  in_ex_glyph_poi: number[],
+  in_implicit_poi: number[],
+  in_im_glyph_poi: number[],
+  in_col_names: string[]
+}
+
 enum Arrange {  // 表中的行列颜色encoding方向
   Row,
   Col
@@ -57,6 +67,7 @@ enum GenDataType {
   DeleteRows,
   CreateRows,
   Sort,
+  Join,
 }
 
 interface GenTblCols {
@@ -72,4 +83,4 @@ interface TblNum {
   out: number[]
 }
 
-export { VisData, TransformType, Arrange, Table, TblNum, Rect, SortType, GenDataType, GenTblCols}
+export { VisData, TransformType, Arrange, Table, TblNum, Rect, SortType, GenDataType, GenTblCols, SelectDataInputTable}

@@ -61,7 +61,6 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
     let join_source_tables
     let join_info
     let join_columns = []
-    console.log(step.function_id);
 
     // 根据操作类型生成rules并筛选data
     switch (step.function_id) {
@@ -1005,7 +1004,6 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         //   context: []
         // }]
         extract_glyph_cols(in_cols, out_cols)
-        // console.log(in_cols, out_cols);
 
         visData.type = TransformType.DeleteRows;
         visData.arrange = Arrange.Row;
@@ -1062,6 +1060,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         visData.type = TransformType.CreateColumns;
         visData.arrange = Arrange.Col;
 
+        console.log(visData);
         res = gen_data(GenDataType.FirstRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols });
 
         break;
@@ -1480,7 +1479,6 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         break;
       // 多表Join
       case "join":
-        console.log("join");
         rule.en = "Join: " + step.source_tables[0];
         rule.cn = "多表Join：" + step.source_tables[0];
 
@@ -1522,13 +1520,26 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         in_tbls = join_source_tables.map(tbl => data_df[tbl])
         out_tbls = step.target_tables.map(tbl => data_df[tbl])
 
-        join_columns = Array.from(new Set(join_columns));       
-        in_cols = [{
-          all: Array.from(in_tbls[0][0]),
-          explicit: join_columns,
-          implicit: [],
-          context: []
-        }]
+        join_columns = Array.from(new Set(join_columns));
+        
+        in_cols = []
+        join_source_tables.forEach((join_tbl: any, index: number) => {
+          let join_single_cols: GenTblCols
+          join_single_cols = {
+            all: Array.from(in_tbls[index][0]),
+            explicit: join_columns,
+            implicit: [],
+            context: []
+          }
+          in_cols.push(join_single_cols)
+        })
+        // let join_single_cols: GenTblCols
+        // in_cols = [{
+        //   all: Array.from(in_tbls[0][0]),
+        //   explicit: join_columns,
+        //   implicit: [],
+        //   context: []
+        // }]
         out_cols = [{
           all: Array.from(out_tbls[0][0]),
           explicit: [],
@@ -1536,12 +1547,15 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
           context: []
         }]
 
-        extract_glyph_cols(in_cols, out_cols);        
+        extract_glyph_cols(in_cols, out_cols);
+
+        console.log(in_cols);
 
         visData.type = TransformType.CombineTables;
-        visData.arrange = Arrange.Col;
+        visData.arrange = Arrange.Row;
 
-        res = gen_data(GenDataType.FirstRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols });
+        res = gen_data(GenDataType.Join, { in: in_tbls, out: out_tbls }, { in: join_source_tables, out: step.target_tables }, { in: in_cols, out: out_cols });
+        console.log(res);
 
         break;
     }
