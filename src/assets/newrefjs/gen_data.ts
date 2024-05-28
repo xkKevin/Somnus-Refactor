@@ -1,8 +1,8 @@
-import { GenDataType, GenTblCols, Table, SelectDataInputTable } from '@assets/newrefjs/interface'
+import { GenDataType, GenTblCols, Table, SelectDataInputTable, SortType } from '@assets/newrefjs/interface'
 
 type DataTable = string[][];
 
-function sortBySpecifiedColumn(data: DataTable, columnName: string, sortOrder: 'asc' | 'desc'): { sortTable: DataTable, rowIndex: number[] } {
+function sortBySpecifiedColumn(data: DataTable, columnName: string, sortOrder: string): { sortTable: DataTable, rowIndex: number[] } {
   // 检查数据中是否包含列名
   const headers: string[] = data[0];
   const columnIndex: number = headers.indexOf(columnName);
@@ -220,7 +220,7 @@ function extract_glyph_cols(in_cols: GenTblCols[], out_cols: GenTblCols[]) {
 // function gen_tr_tbl_data() { }
 
 
-function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_names: { in: string[], out: string[] }, cols: { in: GenTblCols[], out: GenTblCols[] }, show_col_name: boolean = true, sort_column: string = "", sort_type : 'asc' | 'desc' = 'asc') {
+function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_names: { in: string[], out: string[] }, cols: { in: GenTblCols[], out: GenTblCols[] }, show_col_name : boolean | undefined = true, sort_column: string | undefined = "", sort_type : string | undefined = 'asc') {
   // let glyph_cols = extract_glyph_cols(Array.from(tbl[0]), cols)
   // console.log(glyph_cols);
 
@@ -497,12 +497,12 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
       inTable = {
         data: in_tbl,
         name: tbl_names.in[0],
-        color: range(0, in_glyph_cols_poi.length),
+        color: range(0, in_tbl.length - 1),
         scale: {
           x: in_glyph_cols.length / tbls.in[0][0].length,
           y: (in_tbl.length - 1) / (tbls.in[0].length - 1),
         },
-        linkCol: in_ex_glyph_poi
+        linkCol: in_ex_glyph_poi,
       }
 
       out_index = Array(out_glyph_cols_poi.length).fill(null)
@@ -527,6 +527,12 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
         linkCol: out_link
       }
 
+      if (sort_type === "asc") {
+        outTable.sortCol = [SortType.Asc];
+      } else {
+        outTable.sortCol = [SortType.Desc];
+      }
+
       return { in: [inTable], out: [outTable] }
 
     case GenDataType.Join:
@@ -549,7 +555,7 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
         inTable = {
           data: in_tbl,
           name: tbl_names.in[tbl_index],
-          color: range(0, 2),
+          color: range(0, in_tbl.length - 1),
           scale: {
             x: join_tbl_list[tbl_index].in_glyph_cols.length / tbls.in[tbl_index][0].length,
             y: (in_tbl.length - 1) / (tbls.in[tbl_index].length - 1),
@@ -590,6 +596,58 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
       }
 
       return { in: joinInTable, out: [outTable] }
+
+    // 
+    case GenDataType.Agg:
+      while (in_tbl.length < 4 && in_tbl.length < tbls.in[0].length) {
+        let row = tbls.in[0][row_i]
+        let glyph_row = Array(in_glyph_cols_poi.length).fill("")
+        in_explicit_poi.forEach((p, index) => {
+          glyph_row[in_ex_glyph_poi[index]] = row[p]
+        })
+        in_tbl.push(glyph_row)
+
+        row = tbls.out[0][row_i]
+        glyph_row = Array(out_glyph_cols_poi.length).fill("")
+        out_explicit_poi.forEach((p, index) => {
+          glyph_row[out_ex_glyph_poi[index]] = row[p]
+        })
+
+        out_tbl.push(glyph_row)
+
+        row_i++
+      }
+      inTable = {
+        data: in_tbl,
+        name: tbl_names.in[0],
+        color: range(0, in_glyph_cols_poi.length),
+        scale: {
+          x: in_glyph_cols.length / tbls.in[0][0].length,
+          y: (in_tbl.length - 1) / (tbls.in[0].length - 1),
+        },
+      }
+
+      out_index = Array(out_glyph_cols_poi.length).fill(null)
+      in_glyph_cols.forEach((gc, index) => {
+        out_index[out_glyph_cols.indexOf(gc)] = index
+      })
+      index_tmp = in_glyph_cols.length
+      out_index.forEach((oi, index) => {
+        if (oi == null) {
+          out_index[index] = index_tmp++
+        }
+      })
+      outTable = {
+        data: out_tbl,
+        name: tbl_names.out[0],
+        color: out_index,
+        scale: {
+          x: out_glyph_cols.length / tbls.out[0][0].length,
+          y: (out_tbl.length - 1) / (tbls.out[0].length - 1),
+        },
+      }
+
+      return { in: [inTable], out: [outTable] }
 
     default:
       return { in: [], out: [] }

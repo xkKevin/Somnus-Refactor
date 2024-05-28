@@ -234,12 +234,15 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         break;
       // 排序操作
       case "order_by":
+        let sort_type = "";
         if (step.asc) {
           rule.en = "Sort " + step.source_column + " by asc";
           rule.cn = "对" + step.source_column + "进行升序排序";
+          sort_type = "asc";
         } else {
           rule.en = "Sort " + step.source_column + " by desc";
           rule.cn = "对" + step.source_column + "进行降序排序";
+          sort_type = "desc";
         }
 
         in_tbls = step.source_tables.map(tbl => data_df[tbl])
@@ -252,24 +255,26 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         }]
         out_cols = [{
           all: Array.from(out_tbls[0][0]),
-          explicit: [],
+          explicit: [step.target_column],
           implicit: [],
           context: []
         }]
 
         extract_glyph_cols(in_cols, out_cols);
 
-        visData.type = TransformType.CreateColumns;
-        visData.arrange = Arrange.Col;
+        visData.type = TransformType.TransformTables;
+        visData.arrange = Arrange.Row;
 
-        res = gen_data(GenDataType.Sort, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols });
+        res = gen_data(GenDataType.Sort, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols }, undefined, step.source_column, sort_type);
 
         break;
       // 自定义表达式
       case "expression":
-        rule_column_list = step.values.expressions.join(", ");
-        rule.en = "Expressions(" + step.values.function_id + "): " + rule_column_list;
-        rule.cn = "自定义表达式（" + step.values.function_id + "）： " + rule_column_list;
+        console.log("expression");
+        // console.log(step.values[0].expressions);
+        rule_column_list = step.values[0].expressions.join(", ");
+        rule.en = "Expressions(" + step.values[0].function_id + "): " + rule_column_list;
+        rule.cn = "自定义表达式（" + step.values[0].function_id + "）：" + rule_column_list;
 
         break;
       // 类型转换（数字转字符/转整型/转浮点型）
@@ -1296,7 +1301,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         visData.type = TransformType.DeleteRows;
         visData.arrange = Arrange.Row;
 
-        res = gen_data(GenDataType.FirstRows, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols });
+        res = gen_data(GenDataType.Agg, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols });
 
         break;
       // 日期函数

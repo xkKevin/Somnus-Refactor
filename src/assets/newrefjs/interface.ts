@@ -68,6 +68,7 @@ enum GenDataType {
   CreateRows,
   Sort,
   Join,
+  Agg,
 }
 
 interface GenTblCols {
