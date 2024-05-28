@@ -539,7 +539,6 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
       let row
       let glyph_row
       joinInTable = []
-      console.log(in_tbls);
       in_tbls.forEach((in_tbl, tbl_index) => {
         while (in_tbl.length < 3 && in_tbl.length < tbls.in[tbl_index].length) {
           row = tbls.in[tbl_index][row_i];
@@ -550,7 +549,6 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
           in_tbl.push(glyph_row)
           row_i++
         }
-        console.log(join_tbl_list[tbl_index].in_glyph_cols_poi.length);
 
         inTable = {
           data: in_tbl,
@@ -573,22 +571,20 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
         row_i++
       }
 
-      
-
-      out_index = Array(out_glyph_cols_poi.length).fill(null)
-      in_glyph_cols.forEach((gc, index) => {
-        out_index[out_glyph_cols.indexOf(gc)] = index
-      })
-      index_tmp = in_glyph_cols.length
-      out_index.forEach((oi, index) => {
-        if (oi == null) {
-          out_index[index] = index_tmp++
-        }
-      })
+      // out_index = Array(out_glyph_cols_poi.length).fill(null)
+      // in_glyph_cols.forEach((gc, index) => {
+      //   out_index[out_glyph_cols.indexOf(gc)] = index
+      // })
+      // index_tmp = in_glyph_cols.length
+      // out_index.forEach((oi, index) => {
+      //   if (oi == null) {
+      //     out_index[index] = index_tmp++
+      //   }
+      // })
       outTable = {
         data: out_tbl,
         name: tbl_names.out[0],
-        color: out_index,
+        color: range(0, out_tbl.length - 1),
         scale: {
           x: out_glyph_cols.length / tbls.out[0][0].length,
           y: (out_tbl.length - 1) / (tbls.out[0].length - 1),
@@ -620,7 +616,7 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
       inTable = {
         data: in_tbl,
         name: tbl_names.in[0],
-        color: range(0, in_glyph_cols_poi.length),
+        color: range(0, in_tbl.length - 1),
         scale: {
           x: in_glyph_cols.length / tbls.in[0][0].length,
           y: (in_tbl.length - 1) / (tbls.in[0].length - 1),
@@ -640,7 +636,8 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
       outTable = {
         data: out_tbl,
         name: tbl_names.out[0],
-        color: out_index,
+        // color: out_index,
+        color: range(0, out_tbl.length - 1),
         scale: {
           x: out_glyph_cols.length / tbls.out[0][0].length,
           y: (out_tbl.length - 1) / (tbls.out[0].length - 1),

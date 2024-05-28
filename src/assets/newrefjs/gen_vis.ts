@@ -511,7 +511,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         break;
       // 计算（四则运算）
       case "add":
-      case "substract":
+      case "subtract":
       case "multiply":
       case "division":
         rule.en = "Mutate: " + step.target_column + " = " + step.source_column;
@@ -521,7 +521,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
             rule.en += " + " + step.arguments;
             rule.cn += " + " + step.arguments;
             break;
-          case "substract":
+          case "subtract":
             rule.en += " - " + step.arguments;
             rule.cn += " - " + step.arguments;
             break;
@@ -1298,7 +1298,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
 
         extract_glyph_cols(in_cols, out_cols);
 
-        visData.type = TransformType.DeleteRows;
+        visData.type = TransformType.TransformTables;
         visData.arrange = Arrange.Row;
 
         res = gen_data(GenDataType.Agg, { in: in_tbls, out: out_tbls }, { in: step.source_tables, out: step.target_tables }, { in: in_cols, out: out_cols });
@@ -1554,13 +1554,10 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
 
         extract_glyph_cols(in_cols, out_cols);
 
-        console.log(in_cols);
-
         visData.type = TransformType.CombineTables;
         visData.arrange = Arrange.Row;
 
         res = gen_data(GenDataType.Join, { in: in_tbls, out: out_tbls }, { in: join_source_tables, out: step.target_tables }, { in: in_cols, out: out_cols });
-        console.log(res);
 
         break;
     }
