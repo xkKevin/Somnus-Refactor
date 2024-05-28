@@ -11,15 +11,20 @@ function sortBySpecifiedColumn(data: DataTable, columnName: string, sortOrder: s
   }
 
   // 创建一个数组来存储行和原始索引（不包括表头）
-  const rowsWithIndex: Array<{ row: string[], originalIndex: number }> = data.slice(1).map((row, index) => {
-    return { row, originalIndex: index };
-  });
+  const rowsWithIndex: Array<{ row: string[], originalIndex: number }> = data.slice(1).map((row, index) => ({
+    row,
+    originalIndex: index
+  }));
 
   // 执行排序，同时保留原始索引
   rowsWithIndex.sort((a, b) => {
-    const valueA = parseFloat(a.row[columnIndex]);
-    const valueB = parseFloat(b.row[columnIndex]);
-    return sortOrder === 'asc' ? (valueA - valueB) : (valueB - valueA);
+    const valueA = a.row[columnIndex];
+    const valueB = b.row[columnIndex];
+    if (sortOrder === 'asc') {
+      return valueA.localeCompare(valueB);
+    } else {
+      return valueB.localeCompare(valueA);
+    }
   });
 
   // 构建新的数据表，包括表头
@@ -515,6 +520,7 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
       // console.log(in_tbl);
 
       const sort_result = sortBySpecifiedColumn(in_tbl, sort_column, sort_type);
+      console.log(sort_result);
       out_tbl = sort_result.sortTable
 
       if (arraysStrictEqual(in_ex_glyph_poi, out_ex_glyph_poi)) {
