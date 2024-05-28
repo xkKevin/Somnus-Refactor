@@ -1526,7 +1526,7 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         out_tbls = step.target_tables.map(tbl => data_df[tbl])
 
         join_columns = Array.from(new Set(join_columns));
-        
+
         in_cols = []
         join_source_tables.forEach((join_tbl: any, index: number) => {
           let join_single_cols: GenTblCols
@@ -1639,227 +1639,270 @@ export async function gen_vis(data: { "dsl": Array<any>, "data_df": any }, lang:
   // })
 
   /* // 可以打开以下注释，查看更加丰富的例子
-   let visArray2: VisData[] = [{
-     in: [
-       {
-         data: [["amount1", "amount2"], ["100.2", "50.33"], ["75.12", "25"], ["200.1", "100"]],
-         name: "tb1",
-         color: [0, 1],
-         scale: {
-           x: 0.2,  // 展示出来的列数 / 原表的列数
-           y: 0.5
-         },
-         linkCol: [0, 1]
-       }
-     ],
-     out: [{
-       data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
-       name: "tb2",
-       color: [0, 2, 2],
-       scale: {
-         x: 0.2,
-         y: 0.3
-       },
-       linkCol: [1]
-     }],
-     rule: 'create_columns_mutatecreate_columns_mutatecr',
-     type: TransformType.CreateColumns,
-     arrange: Arrange.Col
-   }, {
-     in: [
-       {
-         data: [["amount1"], ["100.2"], ["75.12"], ["200.1"]],
-         name: "tb2",
-         color: [0],
-         scale: {
-           x: 0.2,
-           y: 0.5
-         },
-         linkCol: [0]
-       }
-     ],
-     out: [{
-       data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
-       name: "tb3",
-       color: [0, 1, 2],
-       scale: {
-         x: 0.2,
-         y: 0.3
-       },
-       linkCol: [1, 2]
-     }],
-     rule: 'create_columns_mutatecreate_columns_mutatecr',
-     type: TransformType.CreateColumns,
-     arrange: Arrange.Col
-   }, {
-     in: [
-       {
-         data: [["", "product_name", "total_amount"], ["", "", ""], ["", "", ""], ["", "", ""]],
-         name: "tb1",
-         color: [0, 1, 2],
-         scale: {
-           x: 0.2,
-           y: 0.5
-         },
-         // linkCol: [0]
-       }
-     ],
-     out: [{
-       data: [["product_name", "total_amount"], ["", ""], ["", ""], ["", ""]],
-       name: "tb4",
-       color: [1, 2],
-       scale: {
-         x: 0.2,
-         y: 0.3
-       },
-       // linkCol: [0, 2]
-     }],
-     rule: 'create_columns_mutatecreate_columns_mutatecr',
-     type: TransformType.DeleteColumns,
-     arrange: Arrange.Col
-   }, {
-     in: [
-       {
-         data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""], ["", "2023-01-07", ""]],
-         name: "tb4",
-         color: [0, 1, 2],
-         scale: {
-           x: 0.2,
-           y: 0.5
-         },
-         // linkCol: [0, 2]
-       }
-     ],
-     out: [{
-       data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""]],
-       name: "tb5",
-       color: [2, 1, 0],
-       scale: {
-         x: 0.2,
-         y: 0.3
-       },
-       // linkCol: [0]
-     }],
-     rule: 'Example Explanation',
-     type: TransformType.DeleteRows,
-     arrange: Arrange.Col
-   }, {
-     in: [
-       {
-         data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""], ["", "2023-01-07", ""]],
-         name: "tb3",
-         color: [0, 1, 2],
-         scale: {
-           x: 0.2,
-           y: 0.5
-         }
-       },
-       {
-         data: [["", "order_date"], ["", "2024-01-02"]],
-         name: "tb5",
-         color: [1],
-         scale: {
-           x: 0.2,
-           y: 0.3
-         }
-       }
-     ],
-     out: [{
-       data: [["", "order_date", ""], ["", "2024-01-02", ""]],
-       name: "tb6",
-       color: [1],
-       scale: {
-         x: 0.2,
-         y: 0.3
-       }
-     }],
-     rule: 'create_columns_mutatecreate_columns_mutatecr',
-     type: TransformType.CombineTables,
-     arrange: Arrange.Row
-   }, {
-     in: [
-       {
-         data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"]],
-         name: "tb6",
-         color: [0, 1, 2],
-         scale: {
-           x: 0.2,
-           y: 0.5
-         }
-       }
-     ],
-     out: [{
-       data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
-       name: "tb7_5678Y",
-       color: [0, 1, 2],
-       scale: {
-         x: 0.2,
-         y: 0.3
-       }
-     },],
-     rule: 'create_columns_mutatecreate_columns_mutatecr',
-     type: TransformType.TransformTables,
-     arrange: Arrange.Row
-   }, {
-     in: [
-       {
-         data: [["", "n"], ["", "1"], ["", "2"]],
-         name: "input1, input1,input12,23",
-         color: [0, 1, 2],
-         scale: {
-           x: 0.2,
-           y: 0.5
-         }
-       }
-     ],
-     out: [{
-       data: [["12345678", "n"], ["", "6"], ["", "2"], ["", "1"]],
-       name: "output2nput1, input1,input12,1234",
-       color: [2, 1, 0],
-       scale: {
-         x: 0.2,
-         y: 0.3
-       },
-       sortCol: [SortType.Desc, SortType.Asc]
-     }],
-     rule: 'create_columns_mutatecreate_columns_mutatecr',
-     type: TransformType.TransformTables,
-     arrange: Arrange.Row
-   }, {
-     in: [
-       {
-         data: [["", "n"], ["", "1"], ["", "2"]],
-         name: "output2nput1, input1,input12,1234",
-         color: [0, 1, 2],
-         scale: {
-           x: 0.2,
-           y: 0.5
-         }
-       }
-     ],
-     out: [{
-       data: [["12345678", "n"], ["", "6"], ["", "2"], ["", "1"]],
-       name: "output2n",
-       color: [2, 1, 0],
-       scale: {
-         x: 0.2,
-         y: 0.3
-       },
-       sortCol: [SortType.Desc, SortType.Asc]
-     }],
-     rule: 'create_columns_mutatecreate_columns_mutatecr',
-     type: TransformType.Others,
-     arrange: Arrange.Row
-   }]
-   // try {
-   //   const nodePos = await draw_provenance(visData2);
-   //   console.log('Node positions:', nodePos);
-   //   // 在这里使用 nodePos 进行进一步操作
-   // } catch (error) {
-   //   console.error('Error drawing provenance:', error);
-   // }
-   visArray = visArray2
-   */
+  let visArray2: VisData[] = [{
+    in: [
+      {
+        data: [["amount1", "amount2"], ["100.2", "50.33"], ["75.12", "25"], ["200.1", "100"]],
+        name: "tb1",
+        color: [0, 1],
+        scale: {
+          x: 0.2,  // 展示出来的列数 / 原表的列数
+          y: 0.5
+        },
+        linkCol: [0, 1]
+      }
+    ],
+    out: [{
+      data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
+      name: "tb2",
+      color: [0, 2, 2],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      },
+      linkCol: [1]
+    }],
+    rule: 'create_columns_mutatecreate_columns_mutatecr',
+    type: TransformType.CreateColumns,
+    arrange: Arrange.Col
+  }, {
+    in: [
+      {
+        data: [["amount1"], ["100.2"], ["75.12"], ["200.1"]],
+        name: "tb2",
+        color: [0],
+        scale: {
+          x: 0.2,
+          y: 0.5
+        },
+        linkCol: [0]
+      }
+    ],
+    out: [{
+      data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
+      name: "tb3",
+      color: [0, 1, 2],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      },
+      linkCol: [1, 2]
+    }],
+    rule: 'create_columns_mutatecreate_columns_mutatecr',
+    type: TransformType.CreateColumns,
+    arrange: Arrange.Col
+  }, {
+    in: [
+      {
+        data: [["", "product_name", "total_amount"], ["", "", ""], ["", "", ""], ["", "", ""]],
+        name: "tb1",
+        color: [0, 1, 2],
+        scale: {
+          x: 0.2,
+          y: 0.5
+        },
+        // linkCol: [0]
+      }
+    ],
+    out: [{
+      data: [["product_name", "total_amount"], ["", ""], ["", ""], ["", ""]],
+      name: "tb4",
+      color: [1, 2],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      },
+      // linkCol: [0, 2]
+    }],
+    rule: 'create_columns_mutatecreate_columns_mutatecr',
+    type: TransformType.DeleteColumns,
+    arrange: Arrange.Col
+  }, {
+    in: [
+      {
+        data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""], ["", "2023-01-07", ""]],
+        name: "tb4",
+        color: [0, 1, 2],
+        scale: {
+          x: 0.2,
+          y: 0.5
+        },
+        // linkCol: [0, 2]
+      }
+    ],
+    out: [{
+      data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""]],
+      name: "tb5",
+      color: [2, 1, 0],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      },
+      // linkCol: [0]
+    }],
+    rule: 'Example Explanation',
+    type: TransformType.DeleteRows,
+    arrange: Arrange.Col
+  }, {
+    in: [
+      {
+        data: [["", "order_date", ""], ["", "2024-01-02", ""], ["", "2024-01-03", ""], ["", "2023-01-07", ""]],
+        name: "tb3",
+        color: [0, 1, 2],
+        scale: {
+          x: 0.2,
+          y: 0.5
+        }
+      },
+      {
+        data: [["", "order_date"], ["", "2024-01-02"]],
+        name: "tb5",
+        color: [1],
+        scale: {
+          x: 0.2,
+          y: 0.3
+        }
+      }
+    ],
+    out: [{
+      data: [["", "order_date", ""], ["", "2024-01-02", ""]],
+      name: "tb6",
+      color: [1],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      }
+    }],
+    rule: 'create_columns_mutatecreate_columns_mutatecr',
+    type: TransformType.CombineTables,
+    arrange: Arrange.Row
+  }, {
+    in: [
+      {
+        data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"]],
+        name: "tb6",
+        color: [0, 1, 2],
+        scale: {
+          x: 0.2,
+          y: 0.5
+        }
+      }
+    ],
+    out: [{
+      data: [["amount1", "amount2", "amount123"], ["100.2", "50.33", "150.53"], ["75.12", "25", "100.12"], ["200.1", "100", "300.1"]],
+      name: "tb7_5678Y",
+      color: [0, 1, 2],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      }
+    },],
+    rule: 'create_columns_mutatecreate_columns_mutatecr',
+    type: TransformType.TransformTables,
+    arrange: Arrange.Row
+  }, {
+    in: [
+      {
+        data: [["", "n"], ["", "1"], ["", "2"]],
+        name: "input1, input1,input12,23",
+        color: [0, 1, 2],
+        scale: {
+          x: 0.2,
+          y: 0.5
+        }
+      }
+    ],
+    out: [{
+      data: [["12345678", "n"], ["", "6"], ["", "2"], ["", "1"]],
+      name: "output2nput1, input1,input12,1234",
+      color: [2, 1, 0],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      },
+      sortCol: [SortType.Desc, SortType.Asc]
+    }],
+    rule: 'create_columns_mutatecreate_columns_mutatecr',
+    type: TransformType.TransformTables,
+    arrange: Arrange.Row
+  }, {
+    in: [
+      {
+        data: [["", "n"], ["", "1"], ["", "2"]],
+        name: "output2nput1, input1,input12,1234",
+        color: [0, 1, 2],
+        scale: {
+          x: 0.2,
+          y: 0.5
+        }
+      }
+    ],
+    out: [{
+      data: [["12345678", "n"], ["", "6"], ["", "2"], ["", "1"]],
+      name: "output2n",
+      color: [2, 1, 0],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      },
+      sortCol: [SortType.Desc, SortType.Asc]
+    }],
+    rule: 'create_columns_mutatecreate_columns_mutatecr',
+    type: TransformType.Others,
+    arrange: Arrange.Row
+  }, {
+    in: [
+      {
+        data: [["", "n"], ["", "1"], ["", "2"], ["", "bb"]],
+        name: "output2n",
+        color: [0, 1, 2],
+        scale: {
+          x: 0.2,
+          y: 0.5
+        }
+      }
+    ],
+    out: [{
+      data: [["12345678", "n"], ["", "6"], ["", "2"]],
+      name: "output2n222",
+      color: [2, 1, 0],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      },
+      sortCol: [SortType.Desc, SortType.Asc]
+    }, {
+      data: [["12345678", "n"], ["", "6"], ["", "2"], ["", "1"]],
+      name: "output2n333",
+      color: [2, 1, 0],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      },
+      sortCol: [SortType.Desc, SortType.Asc]
+    }, {
+      data: [["12345678", "n"], ["", "6"], ["", "2"]],
+      name: "output2n444",
+      color: [2, 1, 0],
+      scale: {
+        x: 0.2,
+        y: 0.3
+      },
+      sortCol: [SortType.Desc, SortType.Asc]
+    }],
+    rule: 'create_columns_mutatecreate_columns_mutatecr',
+    type: TransformType.SeparateTables,
+    arrange: Arrange.Row
+  }]
+  // try {
+  //   const nodePos = await draw_provenance(visData2);
+  //   console.log('Node positions:', nodePos);
+  //   // 在这里使用 nodePos 进行进一步操作
+  // } catch (error) {
+  //   console.error('Error drawing provenance:', error);
+  // }
+  visArray = visArray2
+  */
 
   const nodePos = await draw_provenance(visArray);
 

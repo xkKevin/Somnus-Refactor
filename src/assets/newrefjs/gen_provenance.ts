@@ -82,11 +82,19 @@ function draw_edge(g, specs: VisData[], nodePos: { [key: string]: [number, numbe
       // .on('click', function(event) {
       //     codeHighlight(lineNum)
       // })
-    } else if (spi.in.length === 1) {
-      let meetingPosY = nodePos[spi.in[0].name][1] + nodeSize.height / 2
-      let meetingPosX = nodePos[spi.in[0].name][0] + nodeSize.width +
-        0.8 * (Math.min(nodePos[spi.out[0].name][0], nodePos[spi.out[1].name][0]) -
-          nodePos[spi.in[0].name][0] - nodeSize.width)
+    } else {
+      let meetingPosY: Number, meetingPosX: Number  // 节点坐标
+      if (spi.in.length === 1) {
+        meetingPosY = nodePos[spi.in[0].name][1] + nodeSize.height / 2
+        meetingPosX = nodePos[spi.in[0].name][0] + nodeSize.width +
+          0.8 * (Math.min(nodePos[spi.out[0].name][0], nodePos[spi.out[1].name][0]) -
+            nodePos[spi.in[0].name][0] - nodeSize.width)
+      } else {
+        meetingPosY = nodePos[spi.out[0].name][1] + nodeSize.height / 2
+        meetingPosX = Math.max(nodePos[spi.in[0].name][0], nodePos[spi.in[1].name][0]) +
+          nodeSize.width + 0.2 * (nodePos[spi.out[0].name][0] - nodeSize.width -
+            Math.max(nodePos[spi.in[0].name][0], nodePos[spi.in[1].name][0]))
+      }
 
       let str = spi.out[0].name
       let firstIdx = 0
@@ -110,107 +118,34 @@ function draw_edge(g, specs: VisData[], nodePos: { [key: string]: [number, numbe
       //     codeHighlight(lineNum)
       // })
 
-      g.append('line')
-        .attr('x1', nodePos[spi.in[0].name][0] + nodeSize.width)
-        .attr('y1', nodePos[spi.in[0].name][1] + nodeSize.height / 2)
-        .attr('x2', meetingPosX)
-        .attr('y2', meetingPosY)
-        .attr('stroke', lineAttr.color)
-        .attr('stroke-width', lineAttr.strokeWidth)
-        .attr('class', `edge_${idx}`)
-      // .on('click', function(event) {
-      //     codeHighlight(lineNum)
-      // })
+      spi.in.forEach(tbl => {
+        g.append('line')
+          .attr('x1', nodePos[tbl.name][0] + nodeSize.width)
+          .attr('y1', nodePos[tbl.name][1] + nodeSize.height / 2)
+          .attr('x2', meetingPosX)
+          .attr('y2', meetingPosY)
+          .attr('stroke', lineAttr.color)
+          .attr('stroke-width', lineAttr.strokeWidth)
+          .attr('class', `edge_${idx}`)
+        // .on('click', function(event) {
+        //     codeHighlight(lineNum)
+        // })
+      })
 
-      g.append('line')
-        .attr('x1', meetingPosX)
-        .attr('y1', meetingPosY)
-        .attr('x2', nodePos[spi.out[0].name][0])
-        .attr('y2', nodePos[spi.out[0].name][1] + nodeSize.height / 2)
-        .attr('stroke', lineAttr.color)
-        .attr('stroke-width', lineAttr.strokeWidth)
-        .attr("marker-end", `url(#arrow_${idx})`)
-        .attr('class', `edge_${idx}`)
-      // .on('click', function(event) {
-      //     codeHighlight(lineNum)
-      // })
-
-      g.append('line')
-        .attr('x1', meetingPosX)
-        .attr('y1', meetingPosY)
-        .attr('x2', nodePos[spi.out[1].name][0])
-        .attr('y2', nodePos[spi.out[1].name][1] + nodeSize.height / 2)
-        .attr('stroke', lineAttr.color)
-        .attr('stroke-width', lineAttr.strokeWidth)
-        .attr("marker-end", `url(#arrow_${idx})`)
-        .attr('class', `edge_${idx}`)
-      // .on('click', function(event) {
-      //     codeHighlight(lineNum)
-      // })
-    } else {
-      let meetingPosY = nodePos[spi.out[0].name][1] + nodeSize.height / 2
-      let meetingPosX = Math.max(nodePos[spi.in[0].name][0], nodePos[spi.in[1].name][0]) +
-        nodeSize.width + 0.2 * (nodePos[spi.out[0].name][0] - nodeSize.width -
-          Math.max(nodePos[spi.in[0].name][0], nodePos[spi.in[1].name][0]))
-
-      let str = spi.out[0].name
-      let firstIdx = 0
-      for (let s = 0; s < str.length; s++) {
-        if (str[s] >= '0' && str[s] <= '9') {
-          firstIdx = s
-          break
-        }
-      }
-      let lastIdx = str.indexOf("_") === -1 ? str.indexOf(".") : str.indexOf("_")
-      let lineNum = parseInt(str.substring(firstIdx, lastIdx))
-
-      g.append("circle")
-        .attr("cx", meetingPosX)
-        .attr("cy", meetingPosY)
-        .attr("r", 2 * lineAttr.strokeWidth)
-        .style("fill", lineAttr.color)
-        // .style("stroke", "black")
-        .attr('class', `edge_${idx}`)
-      // .on('click', function(event) {
-      //     codeHighlight(lineNum)
-      // })
-
-      g.append('line')
-        .attr('x1', nodePos[spi.in[0].name][0] + nodeSize.width)
-        .attr('y1', nodePos[spi.in[0].name][1] + nodeSize.height / 2)
-        .attr('x2', meetingPosX)
-        .attr('y2', meetingPosY)
-        .attr('stroke', lineAttr.color)
-        .attr('stroke-width', lineAttr.strokeWidth)
-        .attr('class', `edge_${idx}`)
-      // .on('click', function(event) {
-      //     codeHighlight(lineNum)
-      // })
-
-      g.append('line')
-        .attr('x1', nodePos[spi.in[1].name][0] + nodeSize.width)
-        .attr('y1', nodePos[spi.in[1].name][1] + nodeSize.height / 2)
-        .attr('x2', meetingPosX)
-        .attr('y2', meetingPosY)
-        .attr('stroke', lineAttr.color)
-        .attr('stroke-width', lineAttr.strokeWidth)
-        .attr('class', `edge_${idx}`)
-      // .on('click', function(event) {
-      //     codeHighlight(lineNum)
-      // })
-
-      g.append('line')
-        .attr('x1', meetingPosX)
-        .attr('y1', meetingPosY)
-        .attr('x2', nodePos[spi.out[0].name][0])
-        .attr('y2', nodePos[spi.out[0].name][1] + nodeSize.height / 2)
-        .attr('stroke', lineAttr.color)
-        .attr('stroke-width', lineAttr.strokeWidth)
-        .attr("marker-end", `url(#arrow_${idx})`)
-        .attr('class', `edge_${idx}`)
-      // .on('click', function(event) {
-      //     codeHighlight(lineNum)
-      // })
+      spi.out.forEach(tbl => {
+        g.append('line')
+          .attr('x1', meetingPosX)
+          .attr('y1', meetingPosY)
+          .attr('x2', nodePos[tbl.name][0])
+          .attr('y2', nodePos[tbl.name][1] + nodeSize.height / 2)
+          .attr('stroke', lineAttr.color)
+          .attr('stroke-width', lineAttr.strokeWidth)
+          .attr("marker-end", `url(#arrow_${idx})`)
+          .attr('class', `edge_${idx}`)
+        // .on('click', function(event) {
+        //     codeHighlight(lineNum)
+        // })
+      })
     }
   })
 
