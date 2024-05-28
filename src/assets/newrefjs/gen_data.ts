@@ -24,7 +24,7 @@ function sortBySpecifiedColumn(data: DataTable, columnName: string, sortOrder: s
 
   // 构建新的数据表，包括表头
   const sortTable: DataTable = [headers, ...rowsWithIndex.map(item => item.row)];
-  
+
   // 构建行号映射数组，映射数组中的索引从0开始，不包括表头
   const rowIndex: number[] = rowsWithIndex.map(item => item.originalIndex);
 
@@ -128,6 +128,18 @@ function glyph_cols_len(cols: GenTblCols): number {
   return cols.explicit.length + cols.implicit.length + cols.context.length
 }
 
+// 定义一个函数来判断数组是否按给定的排序方式排序
+function isSorted(arr: any[], sort_type) {
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (sort_type === "asc" && arr[i] > arr[i + 1]) {
+      return false;
+    } else if (sort_type === "desc" && arr[i] < arr[i + 1]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /**
  * 给glyph补全explicit，implicit列，以及填充context列
  */
@@ -220,7 +232,7 @@ function extract_glyph_cols(in_cols: GenTblCols[], out_cols: GenTblCols[]) {
 // function gen_tr_tbl_data() { }
 
 
-function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_names: { in: string[], out: string[] }, cols: { in: GenTblCols[], out: GenTblCols[] }, show_col_name : boolean | undefined = true, sort_column: string | undefined = "", sort_type : string | undefined = 'asc') {
+function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_names: { in: string[], out: string[] }, cols: { in: GenTblCols[], out: GenTblCols[] }, show_col_name: boolean | undefined = true, sort_column: string | undefined = "", sort_type: string | undefined = 'asc') {
   // let glyph_cols = extract_glyph_cols(Array.from(tbl[0]), cols)
   // console.log(glyph_cols);
 
@@ -257,7 +269,7 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
 
   // join
   let join_tbl_list = [];
-  tbls.in.forEach((input_table:any, index) =>{
+  tbls.in.forEach((input_table: any, index) => {
     in_glyph_cols = [...cols.in[index].explicit, ...cols.in[index].implicit, ...cols.in[index].context]
     in_glyph_cols_poi = findIndices(cols.in[index].all, in_glyph_cols)
     in_glyph_cols = in_glyph_cols_poi.map(gp => cols.in[index].all[gp])
@@ -283,21 +295,18 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
     let join_tbl: SelectDataInputTable
 
     join_tbl = {
-      in_glyph_cols : in_glyph_cols,
-      in_glyph_cols_poi : in_glyph_cols_poi,
-      in_explicit_poi : in_explicit_poi,
-      in_ex_glyph_poi : in_ex_glyph_poi,
-      in_implicit_poi : in_implicit_poi,
-      in_im_glyph_poi : in_im_glyph_poi,
-      in_col_names : in_col_names,
+      in_glyph_cols: in_glyph_cols,
+      in_glyph_cols_poi: in_glyph_cols_poi,
+      in_explicit_poi: in_explicit_poi,
+      in_ex_glyph_poi: in_ex_glyph_poi,
+      in_implicit_poi: in_implicit_poi,
+      in_im_glyph_poi: in_im_glyph_poi,
+      in_col_names: in_col_names,
     }
     join_tbl_list.push(join_tbl)
   })
 
-  console.log(join_tbl_list);
-  
-
-
+  // console.log(join_tbl_list);
 
   let out_glyph_cols = [...cols.out[0].explicit, ...cols.out[0].implicit, ...cols.out[0].context]
   const out_glyph_cols_poi = findIndices(cols.out[0].all, out_glyph_cols)
@@ -321,9 +330,9 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
 
   out_tbl.push(out_col_names)
 
-  
+
   let row_i = 1
-  let glyph_row_tmp = [], glyph_out_tmp = []
+  let glyph_row_tmp = [], glyph_out_tmp = []  // 用来临时存储行数据
   let in_index = [], out_index = []
 
   let inTable: Table, outTable: Table, joinInTable: Table[]
@@ -469,12 +478,22 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
 
     case GenDataType.Sort:
       while (in_tbl.length < 4 && in_tbl.length < tbls.in[0].length) {
-        let row = tbls.in[0][row_i]
+        let row = tbls.in[0][row_i++]
         let glyph_row = Array(in_glyph_cols_poi.length).fill("")
         in_explicit_poi.forEach((p, index) => {
           glyph_row[in_ex_glyph_poi[index]] = row[p]
         })
-        in_tbl.push(glyph_row)
+        if (in_tbl.length < 3) {
+          in_tbl.push(glyph_row)
+        } else {
+          if (glyph_row_tmp.length === 0) {
+            glyph_row_tmp.push(glyph_row)
+          }
+          let flag = isSorted([in_tbl[1].toString(), in_tbl[2].toString(), glyph_row.toString()], sort_type)
+          if (!flag) {
+            in_tbl.push(glyph_row)
+          }
+        }
 
         // row = tbls.out[0][row_i]
         // glyph_row = Array(out_glyph_cols_poi.length).fill("")
@@ -484,12 +503,21 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
 
         // out_tbl.push(glyph_row)
 
-        row_i++
+        if (row_i === tbls.in[0].length) {
+          break;
+        }
       }
+      if (in_tbl.length < 3 && glyph_row_tmp) {
+        glyph_row_tmp.forEach(grt => {
+          in_tbl.push(grt)
+        })
+      }
+      // console.log(in_tbl);
+
       const sort_result = sortBySpecifiedColumn(in_tbl, sort_column, sort_type);
       out_tbl = sort_result.sortTable
 
-      if (arraysStrictEqual(in_ex_glyph_poi,out_ex_glyph_poi)) {
+      if (arraysStrictEqual(in_ex_glyph_poi, out_ex_glyph_poi)) {
         out_link = out_ex_glyph_poi
       } else {
         out_link = [...difference(new Set(out_ex_glyph_poi), new Set(in_ex_glyph_poi))]
@@ -593,7 +621,7 @@ function gen_data(gen_type: GenDataType, tbls: { in: any[], out: any[] }, tbl_na
 
       return { in: joinInTable, out: [outTable] }
 
-    // 
+    //
     case GenDataType.Agg:
       while (in_tbl.length < 4 && in_tbl.length < tbls.in[0].length) {
         let row = tbls.in[0][row_i]
