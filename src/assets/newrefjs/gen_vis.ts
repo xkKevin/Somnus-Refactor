@@ -270,11 +270,8 @@ function dsl_vis_adapter(dsl: Array<any>, data_df, lang: "en" | "cn" = "en"): Vi
         break;
       // 自定义表达式
       case "expression":
-        console.log("expression");
-        // console.log(step.values[0].expressions);
-        rule_column_list = step.values[0].expressions.join(", ");
-        rule.en = "Expressions(" + step.values[0].function_id + "): " + rule_column_list;
-        rule.cn = "自定义表达式（" + step.values[0].function_id + "）：" + rule_column_list;
+        rule.en = "Expressions: " + step.expressions;
+        rule.cn = "自定义表达式：" + step.expressions;
 
         break;
       // 类型转换（数字转字符/转整型/转浮点型）
